@@ -1,0 +1,63 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-heading font-semibold text-xl text-slate-800 dark:text-slate-200 leading-tight">
+            {{ __('Tambah Pengguna') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-8">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-saas rounded-3xl border border-slate-100/50 p-8">
+                
+                <form method="POST" action="{{ route('users.store') }}" class="space-y-6">
+                    @csrf
+
+                    <div>
+                        <x-input-label for="name" :value="__('Nama Lengkap')" />
+                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="email" :value="__('Email')" />
+                        <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="role" :value="__('Role')" />
+                        <select id="role" name="role" class="block mt-1 w-full border-gray-300 focus:border-primary-500 focus:ring-primary-500 rounded-xl shadow-sm" required>
+                            <option value="">-- Pilih Role --</option>
+                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="prodi" {{ old('role') === 'prodi' ? 'selected' : '' }}>Kaprodi / Pengelola Prodi</option>
+                            <option value="mahasiswa" {{ old('role') === 'mahasiswa' ? 'selected' : '' }}>Mahasiswa (Manual)</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                        <p class="text-xs text-slate-500 mt-1">*Catatan: Mahasiswa sebaiknya dibuat secara otomatis melalui menu Data Mahasiswa.</p>
+                    </div>
+
+                    <div>
+                        <x-input-label for="password" :value="__('Password')" />
+                        <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="password_confirmation" :value="__('Konfirmasi Password')" />
+                        <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
+                    </div>
+
+                    <div class="flex items-center justify-end pt-4 border-t border-slate-100">
+                        <a href="{{ route('users.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-slate-300 rounded-xl font-semibold text-xs text-slate-700 uppercase tracking-widest shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150 mr-3">
+                            Batal
+                        </a>
+                        <x-primary-button>
+                            {{ __('Simpan') }}
+                        </x-primary-button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</x-app-layout>
