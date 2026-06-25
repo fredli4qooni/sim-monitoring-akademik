@@ -5,6 +5,19 @@
         </h2>
     </x-slot>
 
+    <!-- Information Box -->
+    <div class="mb-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-2xl border border-primary-100 dark:border-primary-900/50 flex items-start gap-4">
+        <div class="mt-0.5 p-2 bg-primary-100 dark:bg-primary-800 rounded-xl text-primary-600 dark:text-primary-300 shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div>
+            <h4 class="text-sm font-semibold text-primary-900 dark:text-primary-100 mb-1">Pedoman Kategori Prediksi</h4>
+            <p class="text-sm text-primary-800 dark:text-primary-300 leading-relaxed">
+                Mahasiswa dikategorikan <strong>Tepat Waktu</strong> jika diprediksi lulus maksimal pada semester 8. Sebaliknya, mahasiswa dikategorikan <strong>Tidak Tepat Waktu (Berisiko Terlambat)</strong> jika diprediksi lulus pada semester 9 ke atas.
+            </p>
+        </div>
+    </div>
+
     <!-- Overview Cards -->
     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
         <!-- Total Mahasiswa -->
