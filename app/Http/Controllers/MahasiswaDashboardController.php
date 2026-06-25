@@ -14,12 +14,9 @@ class MahasiswaDashboardController extends Controller
             return redirect()->route('dashboard')->with('error', 'Data mahasiswa tidak ditemukan.');
         }
 
-        $dataAkademik = $mahasiswa->dataAkademik()->orderBy('semester', 'asc')->get();
         $prediksi = $mahasiswa->prediksiKelulusan;
-        
-        $totalSks = $dataAkademik->sum('sks');
-        $ipk = $dataAkademik->count() > 0 ? number_format($dataAkademik->avg('ips'), 2) : 0;
+        $ipk = optional($mahasiswa->dataTambahan)->ip_terakhir ?? 0;
 
-        return view('mahasiswa.dashboard', compact('mahasiswa', 'dataAkademik', 'prediksi', 'totalSks', 'ipk'));
+        return view('mahasiswa.dashboard', compact('mahasiswa', 'prediksi', 'ipk'));
     }
 }

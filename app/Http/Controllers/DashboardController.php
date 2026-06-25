@@ -31,16 +31,6 @@ class DashboardController extends Controller
         $angkatanLabels = array_keys($chartAngkatan);
         $angkatanData = array_values($chartAngkatan);
 
-        // Data chart perkembangan akademik (Rata-rata IPS per Semester)
-        $akademikData = DB::table('data_akademiks')
-            ->select('semester', DB::raw('avg(ips) as avg_ips'))
-            ->groupBy('semester')
-            ->orderBy('semester')
-            ->get();
-
-        $ipsLabels = $akademikData->pluck('semester')->map(fn($s) => 'Smt ' . $s)->toArray();
-        $ipsData = $akademikData->pluck('avg_ips')->map(fn($v) => round($v, 2))->toArray();
-
         // Daftar Mahasiswa Risiko Tinggi
         $highRiskStudents = PrediksiKelulusan::with('mahasiswa')
             ->where('status_risiko', 'Tinggi')
@@ -57,8 +47,6 @@ class DashboardController extends Controller
             'prediksiTerlambat',
             'angkatanLabels', 
             'angkatanData',
-            'ipsLabels',
-            'ipsData',
             'highRiskStudents'
         ));
     }

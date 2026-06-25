@@ -9,12 +9,12 @@
 
         <div class="bg-white rounded-3xl shadow-saas border border-slate-100/50 overflow-hidden">
             <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-                <h3 class="text-lg font-heading font-semibold text-slate-900">Parameter Aplikasi</h3>
-                <p class="mt-1 text-sm text-slate-500">Sesuaikan parameter dasar dan batasan sistem prediksi.</p>
+                <h3 class="text-lg font-heading font-semibold text-slate-900">Pengaturan Tampilan Aplikasi</h3>
+                <p class="mt-1 text-sm text-slate-500">Sesuaikan nama, logo, dan tema warna utama aplikasi.</p>
             </div>
 
             <div class="p-6 sm:p-8">
-                <form method="POST" action="{{ route('settings.update') }}" class="space-y-6 max-w-2xl">
+                <form method="POST" action="{{ route('settings.update') }}" class="space-y-6 max-w-2xl" enctype="multipart/form-data">
                     @csrf
                     
                     <!-- App Name -->
@@ -26,22 +26,34 @@
                         @endif
                     </div>
 
-                    <!-- Batas IPK -->
+                    <!-- Tema Aplikasi -->
                     <div>
-                        <x-input-label for="batas_ipk_aman" value="Batas IPK Aman" class="text-slate-700" />
-                        <x-text-input id="batas_ipk_aman" name="batas_ipk_aman" type="number" step="0.01" class="mt-1 block w-full rounded-xl border-slate-200 focus:border-primary-500 focus:ring-primary-500 shadow-sm" :value="old('batas_ipk_aman', $settings['batas_ipk_aman']->value ?? '')" required />
-                        @if(isset($settings['batas_ipk_aman']->description))
-                            <p class="mt-2 text-sm text-slate-500">{{ $settings['batas_ipk_aman']->description }}</p>
-                        @endif
+                        <x-input-label for="app_theme_color" value="Warna Tema Utama" class="text-slate-700" />
+                        <div class="mt-1 flex items-center gap-3">
+                            <input id="app_theme_color" name="app_theme_color" type="color" class="h-10 w-14 rounded border border-slate-200 cursor-pointer" value="{{ old('app_theme_color', $settings['app_theme_color']->value ?? '#4f46e5') }}" required />
+                            <span class="text-sm text-slate-500">Pilih warna untuk tombol dan aksen aplikasi.</span>
+                        </div>
                     </div>
 
-                    <!-- Batas SKS -->
+                    <!-- Logo Aplikasi -->
                     <div>
-                        <x-input-label for="batas_sks_lulus" value="Batas SKS Lulus" class="text-slate-700" />
-                        <x-text-input id="batas_sks_lulus" name="batas_sks_lulus" type="number" class="mt-1 block w-full rounded-xl border-slate-200 focus:border-primary-500 focus:ring-primary-500 shadow-sm" :value="old('batas_sks_lulus', $settings['batas_sks_lulus']->value ?? '')" required />
-                        @if(isset($settings['batas_sks_lulus']->description))
-                            <p class="mt-2 text-sm text-slate-500">{{ $settings['batas_sks_lulus']->description }}</p>
+                        <x-input-label for="logo" value="Logo Aplikasi (opsional)" class="text-slate-700" />
+                        
+                        @if(isset($settings['app_logo']) && $settings['app_logo']->value)
+                            <div class="mt-3 mb-4 p-4 border border-slate-200 rounded-xl bg-slate-50 flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <img src="{{ asset('storage/' . $settings['app_logo']->value) }}" alt="Logo saat ini" class="h-12 w-12 object-contain rounded-lg shadow-sm border border-slate-200 bg-white">
+                                    <span class="text-sm font-medium text-slate-700">Logo saat ini</span>
+                                </div>
+                                <label class="flex items-center gap-2 cursor-pointer text-red-600 hover:text-red-700 text-sm font-medium">
+                                    <input type="checkbox" name="remove_logo" value="1" class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                                    Hapus & Gunakan Icon Default
+                                </label>
+                            </div>
                         @endif
+
+                        <input id="logo" name="logo" type="file" accept="image/*" class="mt-1 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-colors" />
+                        <p class="mt-2 text-xs text-slate-500">Format: JPG, PNG, atau SVG. Rekomendasi rasio 1:1 (persegi).</p>
                     </div>
 
                     <!-- Maintenance Mode -->

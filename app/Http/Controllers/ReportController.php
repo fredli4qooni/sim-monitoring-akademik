@@ -16,7 +16,7 @@ class ReportController extends Controller
 
     public function downloadPdf(Request $request)
     {
-        $query = Mahasiswa::with(['prediksiKelulusan', 'dataAkademik']);
+        $query = Mahasiswa::with(['prediksiKelulusan', 'dataTambahan']);
 
         if ($request->filled('angkatan')) {
             $query->where('angkatan', $request->angkatan);

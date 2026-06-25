@@ -64,17 +64,15 @@
                 <thead class="bg-slate-50 border-b border-slate-100">
                     <tr>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Mahasiswa</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Smt Selesai</th>
                         <th class="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">IPK Terakhir</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Hasil Prediksi (AI)</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
                     @forelse ($mahasiswas as $mhs)
                         @php
                             $prediksi = $mhs->prediksiKelulusan;
-                            $ipkAvg = $mhs->dataAkademik->avg('ipk');
+                            $ipkAvg = optional($mhs->dataTambahan)->ip_terakhir;
                         @endphp
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -87,9 +85,6 @@
                                         <div class="text-xs text-gray-500 dark:text-gray-400">{{ $mhs->nim }} • Angkatan {{ $mhs->angkatan }}</div>
                                     </div>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700 dark:text-gray-300">
-                                {{ $mhs->dataAkademik->count() }} Semester
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium {{ $ipkAvg >= 3.0 ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400' }}">
                                 {{ $ipkAvg ? number_format($ipkAvg, 2) : '-' }}
@@ -116,11 +111,6 @@
                                 @else
                                     <span class="text-sm text-gray-400 italic">Belum Diprediksi</span>
                                 @endif
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                <a href="{{ route('akademik.show', $mhs->id) }}" class="text-primary-600 hover:text-primary-700 font-semibold transition-colors">
-                                    Detail Data
-                                </a>
                             </td>
                         </tr>
                     @empty

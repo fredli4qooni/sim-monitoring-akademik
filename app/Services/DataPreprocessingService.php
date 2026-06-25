@@ -13,48 +13,67 @@ class DataPreprocessingService
     public function getTrainingDataset()
     {
         // Ambil mahasiswa yang memiliki prediksi (sebagai label) dan data pendukung
-        $mahasiswas = Mahasiswa::with(['dataAkademik', 'dataTambahan', 'prediksiKelulusan'])
+        $mahasiswas = Mahasiswa::with(['dataTambahan', 'prediksiKelulusan'])
             ->whereHas('prediksiKelulusan', function ($q) {
                 $q->whereNotNull('label_aktual'); // Hanya yang punya label (Tepat Waktu/Terlambat)
             })->get();
 
+        $settings = \App\Models\Setting::whereIn('key', [
+            'batas_ipk_tinggi', 'batas_ipk_sedang',
+            'batas_ekonomi_mampu', 'batas_ekonomi_menengah',
+            'batas_sosial_mendukung', 'batas_sosial_cukup',
+            'batas_layanan_baik', 'batas_layanan_cukup'
+        ])->pluck('value', 'key');
+
         $dataset = [];
 
         foreach ($mahasiswas as $mhs) {
-            // Hitung rata-rata IPK dan Total SKS
-            $avgIpk = $mhs->dataAkademik->avg('ipk') ?? 0;
-            $totalSks = $mhs->dataAkademik->sum('total_sks') ?? 0;
+            // Ambil IP Terakhir dari Data Tambahan
+            $avgIpk = optional($mhs->dataTambahan)->ip_terakhir ?? 0;
 
             // Diskritkan IPK
-            if ($avgIpk >= 3.00) {
+            if ($avgIpk >= ($settings['batas_ipk_tinggi'] ?? 3.00)) {
                 $kategoriIpk = 'Tinggi';
-            } elseif ($avgIpk >= 2.50) {
+            } elseif ($avgIpk >= ($settings['batas_ipk_sedang'] ?? 2.50)) {
                 $kategoriIpk = 'Sedang';
             } else {
                 $kategoriIpk = 'Rendah';
             }
 
-            // Diskritkan SKS (Misal standar normal 8 semester = 144)
-            if ($totalSks >= 120) {
-                $kategoriSks = 'Tinggi';
-            } elseif ($totalSks >= 80) {
-                $kategoriSks = 'Sedang';
-            } else {
-                $kategoriSks = 'Rendah';
-            }
+
 
             // Diskritkan Ekonomi
             $ekonomi = optional($mhs->dataTambahan)->kondisi_ekonomi ?? 3;
-            if ($ekonomi >= 4) {
+            if ($ekonomi >= ($settings['batas_ekonomi_mampu'] ?? 4)) {
                 $kategoriEkonomi = 'Mampu';
-            } elseif ($ekonomi == 3) {
+            } elseif ($ekonomi >= ($settings['batas_ekonomi_menengah'] ?? 3)) {
                 $kategoriEkonomi = 'Menengah';
             } else {
                 $kategoriEkonomi = 'Kurang';
             }
 
+            // Diskritkan Sosial
+            $sosial = optional($mhs->dataTambahan)->lingkungan_sosial ?? 3;
+            if ($sosial >= ($settings['batas_sosial_mendukung'] ?? 4)) {
+                $kategoriSosial = 'Mendukung';
+            } elseif ($sosial >= ($settings['batas_sosial_cukup'] ?? 3)) {
+                $kategoriSosial = 'Cukup';
+            } else {
+                $kategoriSosial = 'Kurang';
+            }
+
             // Diskritkan Organisasi
             $organisasi = optional($mhs->dataTambahan)->keaktifan_organisasi ? 'Aktif' : 'Tidak Aktif';
+
+            // Diskritkan Layanan Akademik
+            $layanan = optional($mhs->dataTambahan)->layanan_akademik ?? 3;
+            if ($layanan >= ($settings['batas_layanan_baik'] ?? 4)) {
+                $kategoriLayanan = 'Baik';
+            } elseif ($layanan >= ($settings['batas_layanan_cukup'] ?? 3)) {
+                $kategoriLayanan = 'Cukup';
+            } else {
+                $kategoriLayanan = 'Kurang';
+            }
 
             // Sekolah
             $sekolah = optional($mhs->dataTambahan)->asal_sekolah ?? 'Lainnya';
@@ -64,9 +83,10 @@ class DataPreprocessingService
             $dataset[] = [
                 'mahasiswa_id' => $mhs->id,
                 'ipk' => $kategoriIpk,
-                'sks' => $kategoriSks,
                 'ekonomi' => $kategoriEkonomi,
+                'sosial' => $kategoriSosial,
                 'organisasi' => $organisasi,
+                'layanan' => $kategoriLayanan,
                 'sekolah' => $kategoriSekolah,
                 'label' => $mhs->prediksiKelulusan->label_aktual
             ];
@@ -80,23 +100,35 @@ class DataPreprocessingService
      */
     public function preprocessSingleData(Mahasiswa $mhs)
     {
-        $avgIpk = $mhs->dataAkademik->avg('ipk') ?? 0;
-        $totalSks = $mhs->dataAkademik->sum('total_sks') ?? 0;
+        $settings = \App\Models\Setting::whereIn('key', [
+            'batas_ipk_tinggi', 'batas_ipk_sedang',
+            'batas_ekonomi_mampu', 'batas_ekonomi_menengah',
+            'batas_sosial_mendukung', 'batas_sosial_cukup',
+            'batas_layanan_baik', 'batas_layanan_cukup'
+        ])->pluck('value', 'key');
 
-        if ($avgIpk >= 3.00) $kategoriIpk = 'Tinggi';
-        elseif ($avgIpk >= 2.50) $kategoriIpk = 'Sedang';
+        $avgIpk = optional($mhs->dataTambahan)->ip_terakhir ?? 0;
+
+        if ($avgIpk >= ($settings['batas_ipk_tinggi'] ?? 3.00)) $kategoriIpk = 'Tinggi';
+        elseif ($avgIpk >= ($settings['batas_ipk_sedang'] ?? 2.50)) $kategoriIpk = 'Sedang';
         else $kategoriIpk = 'Rendah';
 
-        if ($totalSks >= 120) $kategoriSks = 'Tinggi';
-        elseif ($totalSks >= 80) $kategoriSks = 'Sedang';
-        else $kategoriSks = 'Rendah';
-
         $ekonomi = optional($mhs->dataTambahan)->kondisi_ekonomi ?? 3;
-        if ($ekonomi >= 4) $kategoriEkonomi = 'Mampu';
-        elseif ($ekonomi == 3) $kategoriEkonomi = 'Menengah';
+        if ($ekonomi >= ($settings['batas_ekonomi_mampu'] ?? 4)) $kategoriEkonomi = 'Mampu';
+        elseif ($ekonomi >= ($settings['batas_ekonomi_menengah'] ?? 3)) $kategoriEkonomi = 'Menengah';
         else $kategoriEkonomi = 'Kurang';
 
+        $sosial = optional($mhs->dataTambahan)->lingkungan_sosial ?? 3;
+        if ($sosial >= ($settings['batas_sosial_mendukung'] ?? 4)) $kategoriSosial = 'Mendukung';
+        elseif ($sosial >= ($settings['batas_sosial_cukup'] ?? 3)) $kategoriSosial = 'Cukup';
+        else $kategoriSosial = 'Kurang';
+
         $organisasi = optional($mhs->dataTambahan)->keaktifan_organisasi ? 'Aktif' : 'Tidak Aktif';
+
+        $layanan = optional($mhs->dataTambahan)->layanan_akademik ?? 3;
+        if ($layanan >= ($settings['batas_layanan_baik'] ?? 4)) $kategoriLayanan = 'Baik';
+        elseif ($layanan >= ($settings['batas_layanan_cukup'] ?? 3)) $kategoriLayanan = 'Cukup';
+        else $kategoriLayanan = 'Kurang';
 
         $sekolah = optional($mhs->dataTambahan)->asal_sekolah ?? 'Lainnya';
         $kategoriSekolah = strpos(strtolower($sekolah), 'smk') !== false ? 'SMK' : 
@@ -104,9 +136,10 @@ class DataPreprocessingService
 
         return [
             'ipk' => $kategoriIpk,
-            'sks' => $kategoriSks,
             'ekonomi' => $kategoriEkonomi,
+            'sosial' => $kategoriSosial,
             'organisasi' => $organisasi,
+            'layanan' => $kategoriLayanan,
             'sekolah' => $kategoriSekolah
         ];
     }

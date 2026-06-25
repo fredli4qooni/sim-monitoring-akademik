@@ -13,9 +13,6 @@ class Mahasiswa extends Model
 
     protected $fillable = ['nim', 'nama', 'angkatan', 'status_aktif'];
 
-    public function dataAkademik() {
-        return $this->hasMany(DataAkademik::class);
-    }
     public function dataTambahan() {
         return $this->hasOne(DataTambahan::class);
     }

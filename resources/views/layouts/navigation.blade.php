@@ -7,13 +7,22 @@
     <!-- Sidebar Header / Branding -->
     <div class="flex items-center px-6 h-20 border-b border-slate-100 shrink-0">
         <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
-            <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary-50 text-primary-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
-                </svg>
+            <div class="h-16 flex items-center border-b border-slate-100 bg-white/50 backdrop-blur-xl">
+                @php
+                    $appLogo = \App\Models\Setting::where('key', 'app_logo')->value('value');
+                @endphp
+                @if($appLogo)
+                    <img src="{{ asset('storage/' . $appLogo) }}" alt="Logo" class="w-8 h-8 object-contain">
+                @else
+                    <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary-50 text-primary-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
+                        </svg>
+                    </div>
+                @endif
+                <span class="ml-3 text-xl font-heading font-extrabold text-slate-900 tracking-tight">{{ \App\Models\Setting::where('key', 'app_name')->value('value') ?? 'SPK UIN RIL' }}</span>
             </div>
-            <span class="text-xl font-heading font-extrabold text-slate-900 tracking-tight">SPK <span class="text-primary-600">UIN RIL</span></span>
         </a>
     </div>
 
@@ -33,21 +42,21 @@
 
 
 
-        <!-- Data Akademik Link -->
-        <x-nav-link :href="route('akademik.index')" :active="request()->routeIs('akademik.*')" >
-            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-            Data Akademik
-        </x-nav-link>
-
         @if(auth()->user()->role === 'admin')
         <!-- Mahasiswa Link -->
-        <x-nav-link :href="route('mahasiswa.index')" :active="request()->routeIs('mahasiswa.*') || request()->routeIs('akademik.*') || request()->routeIs('tambahan.*')">
+        <x-nav-link :href="route('mahasiswa.index')" :active="request()->routeIs('mahasiswa.*')">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             Data Mahasiswa
         </x-nav-link>
+
+        <!-- Kuesioner/Tambahan Link -->
+        <x-nav-link :href="route('tambahan.index')" :active="request()->routeIs('tambahan.*')">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Data Kuesioner
+        </x-nav-link>
         @else
         <!-- Mahasiswa Link (Read-Only Kaprodi) -->
-        <x-nav-link :href="route('mahasiswa.index')" :active="request()->routeIs('mahasiswa.*') || request()->routeIs('akademik.*')">
+        <x-nav-link :href="route('mahasiswa.index')" :active="request()->routeIs('mahasiswa.*')">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             Data Mahasiswa
         </x-nav-link>
@@ -72,6 +81,12 @@
         <x-nav-link :href="route('ml.index')" :active="request()->routeIs('ml.*')">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
             C4.5 Engine
+        </x-nav-link>
+
+        <!-- Parameter Prediksi Link -->
+        <x-nav-link :href="route('parameters.index')" :active="request()->routeIs('parameters.*')">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            Parameter Prediksi
         </x-nav-link>
         @endif
 
@@ -125,13 +140,15 @@
     </nav>
 
     <!-- Sidebar Footer / Logout -->
-    <div class="border-t border-gray-200 dark:border-gray-700 p-4">
-        <form method="POST" action="{{ route('logout') }}">
+    <div class="border-t border-slate-100 dark:border-gray-700 p-4 mt-auto">
+        <form method="POST" action="{{ route('logout') }}" class="w-full">
             @csrf
-            <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                Log Out
-            </a>
+            <button type="submit" class="flex items-center gap-3 w-full px-4 py-3 text-sm font-semibold text-red-600 dark:text-red-400 bg-red-50 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/30 rounded-xl transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-red-500/50">
+                <div class="p-1.5 rounded-lg bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 group-hover:bg-red-200 dark:group-hover:bg-red-900/80 transition-colors">
+                    <svg class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                </div>
+                <span>Keluar Aplikasi</span>
+            </button>
         </form>
     </div>
 </aside>

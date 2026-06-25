@@ -12,8 +12,13 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        <!-- Scripts -->
+        <!-- Scripts & Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Dynamic Theme Colors -->
+        <style>
+            {!! \App\Services\ThemeService::getCssVariables() !!}
+        </style>
     </head>
     <body class="font-sans antialiased text-slate-900 bg-slate-50">
         <div class="flex h-screen overflow-hidden bg-slate-50" x-data="{ sidebarOpen: false }">

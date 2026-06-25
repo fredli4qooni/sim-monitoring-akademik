@@ -29,7 +29,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                 <!-- IPK Card -->
                 <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
                     <div class="flex items-center gap-4">
@@ -43,78 +43,9 @@
                     </div>
                 </div>
 
-                <!-- Total SKS Card -->
-                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500 font-medium">Total SKS</p>
-                            <h4 class="text-2xl font-bold text-slate-800 dark:text-slate-200">{{ $totalSks }}</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sisa SKS -->
-                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500 font-medium">Sisa SKS Lulus</p>
-                            <h4 class="text-2xl font-bold text-slate-800 dark:text-slate-200">{{ max(0, 144 - $totalSks) }}</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Semester Tempuh -->
-                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500 font-medium">Semester Tempuh</p>
-                            <h4 class="text-2xl font-bold text-slate-800 dark:text-slate-200">{{ $dataAkademik->count() }}</h4>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Riwayat Akademik (Kiri, 2 Col) -->
-                <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
-                        <h3 class="font-semibold text-slate-800 dark:text-slate-200">Riwayat Studi (KHS)</h3>
-                    </div>
-                    <div class="p-0 overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50/30 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-700">
-                                    <th class="py-3 px-6 font-semibold text-sm text-slate-500 text-center">Semester</th>
-                                    <th class="py-3 px-6 font-semibold text-sm text-slate-500 text-center">SKS</th>
-                                    <th class="py-3 px-6 font-semibold text-sm text-slate-500 text-center">IPS</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
-                                @forelse($dataAkademik as $data)
-                                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
-                                    <td class="py-3 px-6 text-center font-medium">{{ $data->semester }}</td>
-                                    <td class="py-3 px-6 text-center text-slate-600 dark:text-slate-400">{{ $data->sks }}</td>
-                                    <td class="py-3 px-6 text-center text-slate-600 dark:text-slate-400">{{ number_format($data->ips, 2) }}</td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="3" class="py-8 px-6 text-center text-slate-500">Belum ada riwayat akademik.</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
+            <div class="grid grid-cols-1 gap-6">
                 <!-- Info Kelulusan & Prediksi -->
                 <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
                     <h3 class="font-semibold text-slate-800 dark:text-slate-200 mb-4 border-b border-slate-100 pb-3">Informasi Prediksi</h3>

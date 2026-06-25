@@ -29,8 +29,11 @@ class TambahanController extends Controller
     public function update(Request $request, Mahasiswa $mahasiswa)
     {
         $validated = $request->validate([
+            'ip_terakhir' => 'required|numeric|min:0|max:4',
             'kondisi_ekonomi' => 'required|integer|min:1|max:5',
+            'lingkungan_sosial' => 'required|integer|min:1|max:5',
             'keaktifan_organisasi' => 'required|boolean',
+            'layanan_akademik' => 'required|integer|min:1|max:5',
             'asal_sekolah' => 'required|in:SMA,SMK,MA,Lainnya',
         ]);
         

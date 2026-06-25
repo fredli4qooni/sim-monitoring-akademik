@@ -96,11 +96,11 @@
             </div>
         </div>
 
-        <!-- Line Chart: Rata-rata IPS per Semester -->
+        <!-- Bar Chart: Distribusi Angkatan -->
         <div class="bg-white shadow-saas rounded-3xl border border-slate-100/50 p-6">
-            <h3 class="text-lg font-heading font-semibold text-slate-900 mb-6">Perkembangan Akademik (Rata-rata IPS)</h3>
+            <h3 class="text-lg font-heading font-semibold text-slate-900 mb-6">Distribusi Angkatan Mahasiswa</h3>
             <div class="relative h-64 w-full">
-                <canvas id="ipsChart"></canvas>
+                <canvas id="angkatanChart"></canvas>
             </div>
         </div>
     </div>
@@ -138,7 +138,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-500">
-                                <a href="{{ route('mahasiswa.show', $prediksi->mahasiswa->id) }}" class="text-primary-600 hover:text-primary-900 font-medium">Detail</a>
+                                <a href="{{ route('akademik.show', $prediksi->mahasiswa->id) }}" class="text-primary-600 hover:text-primary-900 font-medium">Detail</a>
                             </td>
                         </tr>
                     @empty
@@ -182,21 +182,17 @@
                 }
             });
 
-            // IPS Chart (Line)
-            const ctxIps = document.getElementById('ipsChart').getContext('2d');
-            new Chart(ctxIps, {
-                type: 'line',
+            // Angkatan Chart (Bar)
+            const ctxAngkatan = document.getElementById('angkatanChart').getContext('2d');
+            new Chart(ctxAngkatan, {
+                type: 'bar',
                 data: {
-                    labels: {!! json_encode($ipsLabels) !!},
+                    labels: {!! json_encode($angkatanLabels) !!},
                     datasets: [{
-                        label: 'Rata-rata IPS',
-                        data: {!! json_encode($ipsData) !!},
-                        borderColor: 'rgba(99, 102, 241, 1)', // Indigo
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+                        label: 'Jumlah Mahasiswa',
+                        data: {!! json_encode($angkatanData) !!},
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderRadius: 4,
                     }]
                 },
                 options: {
@@ -206,7 +202,7 @@
                         legend: { display: false }
                     },
                     scales: {
-                        y: { beginAtZero: false, suggestedMin: 2.0, suggestedMax: 4.0, grid: { display: true, color: 'rgba(156, 163, 175, 0.1)' } },
+                        y: { beginAtZero: true, grid: { display: true, color: 'rgba(156, 163, 175, 0.1)' } },
                         x: { grid: { display: false } }
                     }
                 }

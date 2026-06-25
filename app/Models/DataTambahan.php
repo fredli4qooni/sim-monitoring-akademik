@@ -11,7 +11,7 @@ class DataTambahan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['mahasiswa_id', 'kondisi_ekonomi', 'keaktifan_organisasi', 'asal_sekolah'];
+    protected $fillable = ['mahasiswa_id', 'ip_terakhir', 'kondisi_ekonomi', 'lingkungan_sosial', 'keaktifan_organisasi', 'layanan_akademik', 'asal_sekolah'];
 
     public function mahasiswa() {
         return $this->belongsTo(Mahasiswa::class);
