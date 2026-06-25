@@ -20,6 +20,7 @@ class DashboardController extends Controller
 
         $prediksiTepatWaktu = PrediksiKelulusan::where('prediksi_sistem', 'Tepat Waktu')->count();
         $prediksiTerlambat = PrediksiKelulusan::where('prediksi_sistem', 'Terlambat')->count();
+        $belumDiprediksi = $totalMahasiswa - ($prediksiTepatWaktu + $prediksiTerlambat);
 
         // Data chart distribusi per angkatan
         $chartAngkatan = Mahasiswa::selectRaw('angkatan, count(*) as total')
@@ -45,6 +46,7 @@ class DashboardController extends Controller
             'risikoRendah', 
             'prediksiTepatWaktu',
             'prediksiTerlambat',
+            'belumDiprediksi',
             'angkatanLabels', 
             'angkatanData',
             'highRiskStudents'

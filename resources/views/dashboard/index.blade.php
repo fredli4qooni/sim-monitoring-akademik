@@ -161,12 +161,13 @@
             new Chart(ctxRisk, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Tepat Waktu', 'Terlambat'],
+                    labels: ['Tepat Waktu', 'Terlambat', 'Belum Diprediksi'],
                     datasets: [{
-                        data: [{{ $prediksiTepatWaktu }}, {{ $prediksiTerlambat }}],
+                        data: [{{ $prediksiTepatWaktu }}, {{ $prediksiTerlambat }}, {{ $belumDiprediksi }}],
                         backgroundColor: [
                             'rgba(16, 185, 129, 0.8)', // Green
-                            'rgba(239, 68, 68, 0.8)'   // Red
+                            'rgba(239, 68, 68, 0.8)',  // Red
+                            'rgba(203, 213, 225, 0.8)' // Slate
                         ],
                         borderWidth: 0,
                         hoverOffset: 4

@@ -90,7 +90,7 @@
                                 {{ $ipkAvg ? number_format($ipkAvg, 2) : '-' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($prediksi)
+                                @if($prediksi && $prediksi->prediksi_sistem)
                                     @if($prediksi->status_risiko == 'Rendah')
                                         <div class="flex items-center">
                                             <span class="flex h-3 w-3 relative">
@@ -99,7 +99,7 @@
                                             </span>
                                             <span class="ml-2 text-sm font-medium text-green-700 dark:text-green-400">Tepat Waktu</span>
                                         </div>
-                                    @else
+                                    @elseif($prediksi->status_risiko == 'Tinggi')
                                         <div class="flex items-center">
                                             <span class="flex h-3 w-3 relative">
                                               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -107,6 +107,8 @@
                                             </span>
                                             <span class="ml-2 text-sm font-medium text-red-700 dark:text-red-400">Berisiko Terlambat</span>
                                         </div>
+                                    @else
+                                        <span class="text-sm text-gray-400 italic">Belum Diprediksi</span>
                                     @endif
                                 @else
                                     <span class="text-sm text-gray-400 italic">Belum Diprediksi</span>
