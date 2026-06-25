@@ -7,7 +7,7 @@ use App\Models\C45Rule;
 class DecisionTreeTrainingService
 {
     protected $targetAttribute = 'label';
-    protected $attributes = ['ipk', 'sks', 'ekonomi', 'organisasi', 'sekolah'];
+    protected $attributes = ['ipk', 'ekonomi', 'sosial', 'organisasi', 'layanan', 'sekolah'];
 
     public function train(array $dataset)
     {

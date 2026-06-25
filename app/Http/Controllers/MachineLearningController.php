@@ -34,6 +34,16 @@ class MachineLearningController extends Controller
         // 2. Train model (membangun rule tree baru ke DB)
         $trainer->train($dataset);
 
-        return back()->with('success', 'Model Decision Tree C4.5 berhasil dilatih ulang secara penuh.');
+        // 3. Update / Refresh prediksi semua mahasiswa menggunakan rule yang baru
+        $predictor = app(\App\Services\DecisionTreePredictionService::class);
+        $semuaMahasiswa = Mahasiswa::with('dataTambahan')->get();
+        foreach ($semuaMahasiswa as $mhs) {
+            // Hanya perbarui prediksi untuk mahasiswa yang punya data kuesioner
+            if ($mhs->dataTambahan) {
+                $predictor->updatePredictionForMahasiswa($mhs);
+            }
+        }
+
+        return back()->with('success', 'Model Decision Tree C4.5 berhasil dilatih ulang dan seluruh prediksi telah diperbarui.');
     }
 }
