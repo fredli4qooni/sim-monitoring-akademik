@@ -138,7 +138,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-500">
-                                <a href="{{ route('akademik.show', $prediksi->mahasiswa->id) }}" class="text-primary-600 hover:text-primary-900 font-medium">Detail</a>
+                                <a href="{{ route('tambahan.edit', $prediksi->mahasiswa->id) }}" class="text-primary-600 hover:text-primary-900 font-medium">Detail</a>
                             </td>
                         </tr>
                     @empty
@@ -163,7 +163,7 @@
                 data: {
                     labels: ['Tepat Waktu', 'Terlambat'],
                     datasets: [{
-                        data: [{{ $risikoRendah }}, {{ $risikoTinggi }}],
+                        data: [{{ $prediksiTepatWaktu }}, {{ $prediksiTerlambat }}],
                         backgroundColor: [
                             'rgba(16, 185, 129, 0.8)', // Green
                             'rgba(239, 68, 68, 0.8)'   // Red
