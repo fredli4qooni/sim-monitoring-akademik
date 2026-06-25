@@ -14,12 +14,16 @@ class DecisionTreePredictionService
         
         $prediction = $this->predict($data);
         
+        $validPredictions = ['Tepat Waktu', 'Terlambat'];
+        $prediksiSistem = in_array($prediction, $validPredictions) ? $prediction : null;
+        $statusRisiko = $prediksiSistem === 'Tepat Waktu' ? 'Rendah' : ($prediksiSistem === 'Terlambat' ? 'Tinggi' : null);
+
         // Simpan prediksi
         $mhs->prediksiKelulusan()->updateOrCreate(
             ['mahasiswa_id' => $mhs->id],
             [
-                'prediksi_sistem' => $prediction,
-                'status_risiko' => $prediction == 'Tepat Waktu' ? 'Rendah' : 'Tinggi'
+                'prediksi_sistem' => $prediksiSistem,
+                'status_risiko' => $statusRisiko
             ]
         );
     }

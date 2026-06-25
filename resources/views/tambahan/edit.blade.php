@@ -16,11 +16,6 @@
         <div class="bg-white dark:bg-gray-800 shadow-sm rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div class="p-6 sm:p-8">
                 
-                <div class="mb-8 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-xl border border-primary-100 dark:border-primary-900/50">
-                    <p class="text-sm text-primary-800 dark:text-primary-300">
-                        <strong>Informasi:</strong> Data tambahan ini merupakan fitur penunjang yang akan diikutsertakan dalam analisis prediksi kelulusan mahasiswa pada mesin Decision Tree C4.5.
-                    </p>
-                </div>
 
                 <form method="POST" action="{{ route('tambahan.update', $mahasiswa->id) }}" class="space-y-6">
                     @csrf
