@@ -12,30 +12,56 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalMahasiswa = Mahasiswa::count();
+        $totalMahasiswa = Mahasiswa::where('status_aktif', 'Aktif')->count();
         
-        $risikoTinggi = PrediksiKelulusan::where('status_risiko', 'Tinggi')->count();
-        $risikoSedang = PrediksiKelulusan::where('status_risiko', 'Sedang')->count();
-        $risikoRendah = PrediksiKelulusan::where('status_risiko', 'Rendah')->count();
+        $risikoTinggi = PrediksiKelulusan::whereHas('mahasiswa', function ($q) {
+            $q->where('status_aktif', 'Aktif');
+        })->where('status_risiko', 'Tinggi')->count();
 
-        $prediksiTepatWaktu = PrediksiKelulusan::where('prediksi_sistem', 'Tepat Waktu')->count();
-        $prediksiTerlambat = PrediksiKelulusan::where('prediksi_sistem', 'Terlambat')->count();
+        $risikoSedang = PrediksiKelulusan::whereHas('mahasiswa', function ($q) {
+            $q->where('status_aktif', 'Aktif');
+        })->where('status_risiko', 'Sedang')->count();
+
+        $risikoRendah = PrediksiKelulusan::whereHas('mahasiswa', function ($q) {
+            $q->where('status_aktif', 'Aktif');
+        })->where('status_risiko', 'Rendah')->count();
+
+        $prediksiTepatWaktu = PrediksiKelulusan::whereHas('mahasiswa', function ($q) {
+            $q->where('status_aktif', 'Aktif');
+        })->where('prediksi_sistem', 'Tepat Waktu')->count();
+
+        $prediksiTerlambat = PrediksiKelulusan::whereHas('mahasiswa', function ($q) {
+            $q->where('status_aktif', 'Aktif');
+        })->where('prediksi_sistem', 'Tidak Tepat Waktu')->count();
+
         $belumDiprediksi = $totalMahasiswa - ($prediksiTepatWaktu + $prediksiTerlambat);
 
-        // Data chart distribusi per angkatan
-        $chartAngkatan = Mahasiswa::selectRaw('angkatan, count(*) as total')
-            ->groupBy('angkatan')
-            ->orderBy('angkatan')
-            ->pluck('total', 'angkatan')
-            ->toArray();
+        // Data chart tren prediksi per angkatan
+        $angkatanLabels = Mahasiswa::where('status_aktif', 'Aktif')->select('angkatan')->distinct()->orderBy('angkatan')->pluck('angkatan')->toArray();
+        $trendTepatWaktu = [];
+        $trendTidakTepatWaktu = [];
 
-        $angkatanLabels = array_keys($chartAngkatan);
-        $angkatanData = array_values($chartAngkatan);
+        foreach ($angkatanLabels as $angkatan) {
+            $trendTepatWaktu[] = Mahasiswa::where('status_aktif', 'Aktif')->where('angkatan', $angkatan)
+                ->whereHas('prediksiKelulusan', function ($q) {
+                    $q->where('prediksi_sistem', 'Tepat Waktu');
+                })->count();
+
+            $trendTidakTepatWaktu[] = Mahasiswa::where('status_aktif', 'Aktif')->where('angkatan', $angkatan)
+                ->whereHas('prediksiKelulusan', function ($q) {
+                    $q->where('prediksi_sistem', 'Tidak Tepat Waktu');
+                })->count();
+        }
 
         // Daftar Mahasiswa Risiko Tinggi
-        $highRiskStudents = PrediksiKelulusan::with('mahasiswa')
-            ->where('status_risiko', 'Tinggi')
-            ->orWhere('prediksi_sistem', 'Terlambat')
+        $highRiskStudents = PrediksiKelulusan::with('mahasiswa.dataTambahan')
+            ->whereHas('mahasiswa', function ($q) {
+                $q->where('status_aktif', 'Aktif');
+            })
+            ->where(function($q) {
+                $q->where('status_risiko', 'Tinggi')
+                  ->orWhere('prediksi_sistem', 'Tidak Tepat Waktu');
+            })
             ->take(5)
             ->get();
 
@@ -48,7 +74,8 @@ class DashboardController extends Controller
             'prediksiTerlambat',
             'belumDiprediksi',
             'angkatanLabels', 
-            'angkatanData',
+            'trendTepatWaktu',
+            'trendTidakTepatWaktu',
             'highRiskStudents'
         ));
     }

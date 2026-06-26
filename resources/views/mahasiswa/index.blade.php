@@ -5,10 +5,16 @@
                 {{ __('Data Mahasiswa') }}
             </h2>
             @if(auth()->user()->role === 'admin')
-            <a href="{{ route('mahasiswa.create') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-xl transition-colors shadow-sm">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Tambah Mahasiswa
-            </a>
+            <div class="flex gap-2">
+                <a href="{{ route('mahasiswa.create') }}" class="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-sm font-medium rounded-xl transition-colors shadow-sm">
+                    <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah Mahasiswa
+                </a>
+                <button type="button" class="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-sm font-medium rounded-xl transition-colors shadow-sm">
+                    <svg class="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    Import Excel
+                </button>
+            </div>
             @endif
         </div>
     </x-slot>
@@ -36,56 +42,60 @@
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50/50 border-b border-slate-100">
-                                <th class="py-4 px-6 font-semibold text-sm text-slate-500">NIM</th>
-                                <th class="py-4 px-6 font-semibold text-sm text-slate-500">Nama Lengkap</th>
+                                <th class="py-4 px-6 font-semibold text-sm text-slate-500 text-center">No</th>
+                                <th class="py-4 px-6 font-semibold text-sm text-slate-500">NPM</th>
+                                <th class="py-4 px-6 font-semibold text-sm text-slate-500">Nama</th>
                                 <th class="py-4 px-6 font-semibold text-sm text-slate-500 text-center">Angkatan</th>
-                                <th class="py-4 px-6 font-semibold text-sm text-slate-500 text-center">Status</th>
+                                <th class="py-4 px-6 font-semibold text-sm text-slate-500 text-center">IP Terakhir</th>
+                                <th class="py-4 px-6 font-semibold text-sm text-slate-500 text-center">Kondisi Ekonomi</th>
+                                <th class="py-4 px-6 font-semibold text-sm text-slate-500 text-center">Organisasi</th>
+                                @if(auth()->user()->role === 'admin')
                                 <th class="py-4 px-6 font-semibold text-sm text-slate-500 text-right">Aksi</th>
-                            </tr>
+                                @endif
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse($mahasiswas as $mahasiswa)
                             <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="py-4 px-6 text-center text-slate-600">{{ $loop->iteration + $mahasiswas->firstItem() - 1 }}</td>
                                 <td class="py-4 px-6 text-slate-600 font-medium">{{ $mahasiswa->nim }}</td>
                                 <td class="py-4 px-6">
                                     <div class="font-medium text-slate-900">{{ $mahasiswa->nama }}</div>
                                 </td>
                                 <td class="py-4 px-6 text-center text-slate-600">{{ $mahasiswa->angkatan }}</td>
-                                <td class="py-4 px-6 text-center">
-                                    @if($mahasiswa->status_aktif === 'Aktif')
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                                    @elseif($mahasiswa->status_aktif === 'Lulus')
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Lulus</span>
-                                    @elseif($mahasiswa->status_aktif === 'Cuti')
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Cuti</span>
+                                <td class="py-4 px-6 text-center text-slate-600">{{ $mahasiswa->dataTambahan->ip_terakhir ?? '-' }}</td>
+                                <td class="py-4 px-6 text-center text-slate-600">
+                                    @php
+                                        $ekonomi = [1 => 'Sangat Kurang', 2 => 'Kurang', 3 => 'Sedang', 4 => 'Baik', 5 => 'Sangat Baik'];
+                                        $val = $mahasiswa->dataTambahan->kondisi_ekonomi ?? null;
+                                    @endphp
+                                    {{ $val ? $ekonomi[$val] : '-' }}
+                                </td>
+                                <td class="py-4 px-6 text-center text-slate-600">
+                                    @if(isset($mahasiswa->dataTambahan->keaktifan_organisasi))
+                                        {{ $mahasiswa->dataTambahan->keaktifan_organisasi ? 'Aktif' : 'Tidak Aktif' }}
                                     @else
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Keluar</span>
+                                        -
                                     @endif
                                 </td>
-                                <td class="py-4 px-6 text-right space-x-2">
-                                    <a href="{{ route('akademik.index', ['search' => $mahasiswa->nim]) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-teal-50 text-teal-600 hover:bg-teal-100 transition-colors" title="Lihat Data Akademik">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                                    </a>
-                                    
-                                    @if(auth()->user()->role === 'admin')
-                                    <a href="{{ route('mahasiswa.edit', $mahasiswa->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" title="Edit Data">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                @if(auth()->user()->role === 'admin')
+                                <td class="py-4 px-6 text-right space-x-2 whitespace-nowrap">
+                                    <a href="{{ route('mahasiswa.edit', $mahasiswa->id) }}" class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-primary-600 transition-colors text-xs font-medium" title="Edit Data">
+                                        Edit
                                     </a>
                                     
                                     <form action="{{ route('mahasiswa.destroy', $mahasiswa->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors" title="Hapus Data">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        <button type="submit" class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors text-xs font-medium" title="Hapus Data">
+                                            Hapus
                                         </button>
                                     </form>
-                                    @endif
                                 </td>
+                                @endif
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="py-8 px-6 text-center text-slate-500">
+                                <td colspan="8" class="py-8 px-6 text-center text-slate-500">
                                     Tidak ada data mahasiswa yang ditemukan.
                                 </td>
                             </tr>
@@ -95,9 +105,11 @@
                 </div>
             </div>
             
-            <div class="mt-4">
-                {{ $mahasiswas->links() }}
+            @if($mahasiswas->hasPages())
+            <div class="mt-4 px-6 py-4 bg-white rounded-2xl shadow-sm border border-slate-100">
+                {{ $mahasiswas->withQueryString()->links() }}
             </div>
+            @endif
 
         </div>
     </div>

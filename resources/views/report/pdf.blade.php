@@ -76,10 +76,9 @@
             <tr>
                 <th width="5%">No</th>
                 <th width="15%">NIM</th>
-                <th width="25%">Nama Mahasiswa</th>
+                <th width="30%">Nama Mahasiswa</th>
                 <th width="10%" class="text-center">Angkatan</th>
-                <th width="10%" class="text-center">Smt Selesai</th>
-                <th width="10%" class="text-center">IPK Rata-rata</th>
+                <th width="15%" class="text-center">IP Terakhir</th>
                 <th width="25%">Prediksi Kelulusan (AI)</th>
             </tr>
         </thead>
@@ -87,22 +86,23 @@
             @forelse($mahasiswas as $index => $mhs)
                 @php
                     $prediksi = $mhs->prediksiKelulusan;
-                    $ipkAvg = $mhs->dataAkademik->avg('ipk');
+                    $ipkAvg = optional($mhs->dataTambahan)->ip_terakhir;
                 @endphp
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ $mhs->nim }}</td>
                     <td>{{ $mhs->nama }}</td>
                     <td class="text-center">{{ $mhs->angkatan }}</td>
-                    <td class="text-center">{{ $mhs->dataAkademik->count() }}</td>
                     <td class="text-center">{{ $ipkAvg ? number_format($ipkAvg, 2) : '-' }}</td>
                     <td>
                         @if($prediksi)
-                            @if($prediksi->status_risiko == 'Rendah')
-                                <span class="status-rendah">Tepat Waktu (Aman)</span>
+                            @if($prediksi->prediksi_sistem == 'Tepat Waktu')
+                                <span class="status-rendah">Tepat Waktu</span>
                             @else
-                                <span class="status-tinggi">Terlambat (Berisiko)</span>
+                                <span class="status-tinggi">Tidak Tepat Waktu</span>
                             @endif
+                            <br>
+                            <span style="font-size: 10px; color: #666;">Risiko: {{ $prediksi->status_risiko }}</span>
                         @else
                             <span style="color: #9ca3af; font-style: italic;">Belum Diprediksi</span>
                         @endif

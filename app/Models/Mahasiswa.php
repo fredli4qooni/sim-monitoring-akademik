@@ -11,7 +11,13 @@ class Mahasiswa extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nim', 'nama', 'angkatan', 'status_aktif'];
+    protected $fillable = [
+        'nim',
+        'nama',
+        'angkatan',
+        'status_aktif',
+        'semester_lulus'
+    ];
 
     public function dataTambahan() {
         return $this->hasOne(DataTambahan::class);

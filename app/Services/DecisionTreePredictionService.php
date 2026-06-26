@@ -14,9 +14,9 @@ class DecisionTreePredictionService
         
         $prediction = $this->predict($data);
         
-        $validPredictions = ['Tepat Waktu', 'Terlambat'];
+        $validPredictions = ['Tepat Waktu', 'Tidak Tepat Waktu'];
         $prediksiSistem = in_array($prediction, $validPredictions) ? $prediction : null;
-        $statusRisiko = $prediksiSistem === 'Tepat Waktu' ? 'Rendah' : ($prediksiSistem === 'Terlambat' ? 'Tinggi' : null);
+        $statusRisiko = $prediksiSistem === 'Tepat Waktu' ? 'Rendah' : ($prediksiSistem === 'Tidak Tepat Waktu' ? 'Tinggi' : null);
 
         // Simpan prediksi
         $mhs->prediksiKelulusan()->updateOrCreate(
@@ -38,6 +38,65 @@ class DecisionTreePredictionService
         }
 
         return $this->traverseTree($rootNode, $data);
+    }
+
+    public function predictWithDetails(Mahasiswa $mhs)
+    {
+        $preprocessor = new DataPreprocessingService();
+        $data = $preprocessor->preprocessSingleData($mhs);
+        
+        $rootNode = C45Rule::whereNull('parent_node')->first();
+        if (!$rootNode) {
+            return ['status' => 'Belum Ditraining', 'rule_path' => [], 'data' => $data];
+        }
+
+        $path = [];
+        $result = $this->traverseTreeWithPath($rootNode, $data, $path);
+
+        return [
+            'status' => $result,
+            'rule_path' => $path,
+            'data' => $data
+        ];
+    }
+
+    protected function traverseTreeWithPath($node, $data, &$path)
+    {
+        if ($node->label !== null) {
+            $path[] = [
+                'type' => 'conclusion',
+                'label' => $node->label
+            ];
+            return $node->label;
+        }
+
+        $attribute = $node->attribute;
+        $value = $data[$attribute] ?? null;
+
+        if (!$value) {
+            return 'Data Tidak Lengkap';
+        }
+
+        $childNode = C45Rule::where('parent_node', $node->id)
+                            ->where('condition', $value)
+                            ->first();
+
+        if (!$childNode) {
+            $fallback = $this->getMajorityFallback($node->id);
+            $path[] = [
+                'type' => 'fallback',
+                'label' => $fallback
+            ];
+            return $fallback;
+        }
+
+        $path[] = [
+            'type' => 'condition',
+            'attribute' => $attribute,
+            'condition' => $value
+        ];
+
+        return $this->traverseTreeWithPath($childNode, $data, $path);
     }
 
     protected function traverseTree($node, $data)

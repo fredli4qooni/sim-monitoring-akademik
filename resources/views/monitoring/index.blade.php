@@ -13,7 +13,7 @@
         <div>
             <h4 class="text-sm font-semibold text-primary-900 dark:text-primary-100 mb-1">Pedoman Kategori Prediksi</h4>
             <p class="text-sm text-primary-800 dark:text-primary-300 leading-relaxed">
-                Mahasiswa dikategorikan <strong>Tepat Waktu</strong> jika diprediksi lulus maksimal pada semester 8. Sebaliknya, mahasiswa dikategorikan <strong>Tidak Tepat Waktu (Berisiko Terlambat)</strong> jika diprediksi lulus pada semester 9 ke atas.
+                Tabel ini menampilkan hasil prediksi massal otomatis dari Model C4.5. Mahasiswa dikategorikan <strong>Tepat Waktu</strong> jika diprediksi lulus maksimal pada semester 8. Sebaliknya, mahasiswa dikategorikan <strong>Tidak Tepat Waktu (Berisiko Terlambat)</strong> jika diprediksi lulus pada semester 9 ke atas. Klik tombol <strong>Lihat Detail</strong> untuk membedah alasan keputusan (Rule) sistem.
             </p>
         </div>
     </div>
@@ -21,8 +21,8 @@
     <div class="bg-white shadow-saas rounded-3xl border border-slate-100/50 overflow-hidden">
         
         <!-- Toolbar & Filter -->
-        <div class="p-6 border-b border-slate-100 bg-white">
-            <form method="GET" action="{{ route('monitoring.index') }}" class="flex flex-col md:flex-row flex-wrap gap-4 items-center">
+        <div class="p-6 border-b border-slate-100 bg-white flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <form method="GET" action="{{ route('monitoring.index') }}" class="flex flex-col md:flex-row flex-wrap gap-4 items-end flex-1">
                 
                 <!-- Search -->
                 <div class="relative flex-1 w-full md:w-auto min-w-[200px]">
@@ -53,7 +53,7 @@
 
                 <!-- Actions -->
                 <div class="flex flex-wrap gap-2 w-full md:w-auto shrink-0">
-                    <button type="submit" class="px-4 py-2.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl shadow-md shadow-primary-600/20 transition-all">
+                    <button type="submit" class="px-4 py-2.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl shadow-md shadow-primary-600/20 transition-all font-medium">
                         Filter
                     </button>
                     @if(request()->anyFilled(['search', 'angkatan', 'status']))
@@ -61,14 +61,18 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </a>
                     @endif
-                    
-                    <a href="{{ route('report.pdf', request()->query()) }}" target="_blank" class="px-4 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-xl shadow-md shadow-red-600/20 transition-all flex items-center gap-2" title="Cetak Laporan PDF">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        Cetak PDF
-                    </a>
                 </div>
-
             </form>
+
+            @if(auth()->user()->role === 'admin')
+            <form action="{{ route('monitoring.run') }}" method="POST" class="w-full md:w-auto mt-4 md:mt-0" onsubmit="return confirm('Proses ini akan memprediksi seluruh mahasiswa aktif menggunakan model C4.5 terbaru. Lanjutkan?');">
+                @csrf
+                <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center gap-2 w-full md:w-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    Jalankan Prediksi
+                </button>
+            </form>
+            @endif
         </div>
 
         <!-- Table -->
@@ -79,6 +83,7 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Mahasiswa</th>
                         <th class="px-6 py-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">IPK Terakhir</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Hasil Prediksi (AI)</th>
+                        <th class="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white">
@@ -127,10 +132,16 @@
                                     <span class="text-sm text-gray-400 italic">Belum Diprediksi</span>
                                 @endif
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{{ route('monitoring.show', $mhs->id) }}" class="inline-flex items-center px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg transition-colors">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    Lihat Detail Analisis
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
+                            <td colspan="4" class="px-6 py-12 text-center">
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                 <p class="mt-4 text-sm text-gray-500">Tidak ada mahasiswa yang sesuai kriteria.</p>
                             </td>

@@ -12,11 +12,11 @@ class DataPreprocessingService
      */
     public function getTrainingDataset()
     {
-        // Ambil mahasiswa yang memiliki prediksi (sebagai label) dan data pendukung
-        $mahasiswas = Mahasiswa::with(['dataTambahan', 'prediksiKelulusan'])
-            ->whereHas('prediksiKelulusan', function ($q) {
-                $q->whereNotNull('label_aktual'); // Hanya yang punya label (Tepat Waktu/Terlambat)
-            })->get();
+        // Ambil mahasiswa yang berstatus Lulus dan punya data tambahan
+        $mahasiswas = Mahasiswa::with(['dataTambahan'])
+            ->where('status_aktif', 'Lulus')
+            ->whereNotNull('semester_lulus')
+            ->get();
 
         $settings = \App\Models\Setting::whereIn('key', [
             'batas_ipk_tinggi', 'batas_ipk_sedang',
@@ -80,6 +80,9 @@ class DataPreprocessingService
             $kategoriSekolah = strpos(strtolower($sekolah), 'smk') !== false ? 'SMK' : 
                               (strpos(strtolower($sekolah), 'sma') !== false ? 'SMA' : 'Lainnya');
 
+            // Tentukan label kelulusan berdasarkan semester lulus
+            $label = ($mhs->semester_lulus <= 8) ? 'Tepat Waktu' : 'Tidak Tepat Waktu';
+
             $dataset[] = [
                 'mahasiswa_id' => $mhs->id,
                 'ipk' => $kategoriIpk,
@@ -88,7 +91,7 @@ class DataPreprocessingService
                 'organisasi' => $organisasi,
                 'layanan' => $kategoriLayanan,
                 'sekolah' => $kategoriSekolah,
-                'label' => $mhs->prediksiKelulusan->label_aktual
+                'label' => $label
             ];
         }
 

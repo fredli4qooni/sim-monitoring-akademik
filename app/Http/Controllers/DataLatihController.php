@@ -3,28 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
+use App\Services\DecisionTreePredictionService;
 use Illuminate\Http\Request;
 
-class MahasiswaController extends Controller
+class DataLatihController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $mahasiswas = Mahasiswa::with('dataTambahan')
-            ->where('status_aktif', 'Aktif')
+        $mahasiswas = Mahasiswa::with('prediksiKelulusan')
+            ->where('status_aktif', 'Lulus')
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('nama', 'like', "%{$search}%")
                       ->orWhere('nim', 'like', "%{$search}%");
                 });
             })->latest()->paginate(10);
-
-        return view('mahasiswa.index', compact('mahasiswas', 'search'));
+            
+        return view('data-latih.index', compact('mahasiswas', 'search'));
     }
 
     public function create()
     {
-        return view('mahasiswa.create');
+        return view('data-latih.create');
     }
 
     public function store(Request $request)
@@ -33,7 +34,7 @@ class MahasiswaController extends Controller
             'nim' => 'required|string|unique:mahasiswas,nim',
             'nama' => 'required|string|max:255',
             'angkatan' => 'required|integer|min:2000|max:'.(date('Y') + 1),
-            'status_aktif' => 'required|in:Aktif,Cuti,Lulus,Keluar',
+            'semester_lulus' => 'required|integer|min:7|max:14',
             'ip_terakhir' => 'required|numeric|min:0|max:4',
             'kondisi_ekonomi' => 'required|integer|min:1|max:5',
             'lingkungan_sosial' => 'required|integer|min:1|max:5',
@@ -46,7 +47,8 @@ class MahasiswaController extends Controller
             'nim' => $validated['nim'],
             'nama' => $validated['nama'],
             'angkatan' => $validated['angkatan'],
-            'status_aktif' => $validated['status_aktif'],
+            'status_aktif' => 'Lulus',
+            'semester_lulus' => $validated['semester_lulus'],
         ]);
 
         $mhs->dataTambahan()->create([
@@ -58,15 +60,19 @@ class MahasiswaController extends Controller
             'asal_sekolah' => $validated['asal_sekolah'],
         ]);
 
-        app(\App\Services\DecisionTreePredictionService::class)->updatePredictionForMahasiswa($mhs);
+        $label = $validated['semester_lulus'] <= 8 ? 'Tepat Waktu' : 'Tidak Tepat Waktu';
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data Mahasiswa berhasil ditambahkan.');
+        $mhs->prediksiKelulusan()->create([
+            'label_aktual' => $label,
+        ]);
+
+        return redirect()->route('data-latih.index')->with('success', 'Data Latih berhasil ditambahkan.');
     }
 
     public function edit(Mahasiswa $mahasiswa)
     {
-        $mahasiswa->load('dataTambahan');
-        return view('mahasiswa.edit', compact('mahasiswa'));
+        $mahasiswa->load(['dataTambahan', 'prediksiKelulusan']);
+        return view('data-latih.edit', compact('mahasiswa'));
     }
 
     public function update(Request $request, Mahasiswa $mahasiswa)
@@ -75,7 +81,7 @@ class MahasiswaController extends Controller
             'nim' => 'required|string|unique:mahasiswas,nim,' . $mahasiswa->id,
             'nama' => 'required|string|max:255',
             'angkatan' => 'required|integer|min:2000|max:'.(date('Y') + 1),
-            'status_aktif' => 'required|in:Aktif,Cuti,Lulus,Keluar',
+            'semester_lulus' => 'required|integer|min:7|max:14',
             'ip_terakhir' => 'required|numeric|min:0|max:4',
             'kondisi_ekonomi' => 'required|integer|min:1|max:5',
             'lingkungan_sosial' => 'required|integer|min:1|max:5',
@@ -88,7 +94,8 @@ class MahasiswaController extends Controller
             'nim' => $validated['nim'],
             'nama' => $validated['nama'],
             'angkatan' => $validated['angkatan'],
-            'status_aktif' => $validated['status_aktif'],
+            'status_aktif' => 'Lulus',
+            'semester_lulus' => $validated['semester_lulus'],
         ]);
 
         $mahasiswa->dataTambahan()->updateOrCreate(
@@ -103,14 +110,19 @@ class MahasiswaController extends Controller
             ]
         );
 
-        app(\App\Services\DecisionTreePredictionService::class)->updatePredictionForMahasiswa($mahasiswa);
+        $label = $validated['semester_lulus'] <= 8 ? 'Tepat Waktu' : 'Tidak Tepat Waktu';
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data Mahasiswa berhasil diperbarui.');
+        $mahasiswa->prediksiKelulusan()->updateOrCreate(
+            ['mahasiswa_id' => $mahasiswa->id],
+            ['label_aktual' => $label]
+        );
+
+        return redirect()->route('data-latih.index')->with('success', 'Data Latih berhasil diperbarui.');
     }
 
     public function destroy(Mahasiswa $mahasiswa)
     {
         $mahasiswa->delete();
-        return redirect()->route('mahasiswa.index')->with('success', 'Data Mahasiswa berhasil dihapus.');
+        return redirect()->route('data-latih.index')->with('success', 'Data Latih berhasil dihapus.');
     }
 }

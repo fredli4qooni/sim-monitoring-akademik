@@ -13,9 +13,9 @@ class MachineLearningController extends Controller
     public function index()
     {
         $rulesCount = C45Rule::count();
-        $totalTrainingData = Mahasiswa::whereHas('prediksiKelulusan', function ($q) {
-            $q->whereNotNull('label_aktual');
-        })->count();
+        $totalTrainingData = Mahasiswa::where('status_aktif', 'Lulus')
+            ->whereNotNull('semester_lulus')
+            ->count();
         
         $rules = C45Rule::orderBy('id')->get();
 
@@ -34,16 +34,8 @@ class MachineLearningController extends Controller
         // 2. Train model (membangun rule tree baru ke DB)
         $trainer->train($dataset);
 
-        // 3. Update / Refresh prediksi semua mahasiswa menggunakan rule yang baru
-        $predictor = app(\App\Services\DecisionTreePredictionService::class);
-        $semuaMahasiswa = Mahasiswa::with('dataTambahan')->get();
-        foreach ($semuaMahasiswa as $mhs) {
-            // Hanya perbarui prediksi untuk mahasiswa yang punya data kuesioner
-            if ($mhs->dataTambahan) {
-                $predictor->updatePredictionForMahasiswa($mhs);
-            }
-        }
-
-        return back()->with('success', 'Model Decision Tree C4.5 berhasil dilatih ulang dan seluruh prediksi telah diperbarui.');
+        // 3. (Dihapus) Prediksi massal dipindah ke tombol tersendiri di menu Prediksi
+        
+        return back()->with('success', 'Model Decision Tree C4.5 berhasil dilatih ulang berdasarkan data terbaru!');
     }
 }
