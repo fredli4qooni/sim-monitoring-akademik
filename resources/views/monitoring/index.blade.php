@@ -104,8 +104,8 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium {{ $ipkAvg >= 3.0 ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400' }}">
-                                {{ $ipkAvg ? number_format($ipkAvg, 2) : '-' }}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium text-slate-700">
+                                {{ $ipkAvg ?? '-' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($prediksi && $prediksi->prediksi_sistem)
@@ -157,4 +157,27 @@
             </div>
         @endif
     </div>
+
+    <!-- Toast Notification (Alpine.js) -->
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" class="fixed bottom-4 right-4 z-50">
+            <div class="bg-gray-900 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-3">
+                <div class="bg-green-500/20 text-green-400 p-1.5 rounded-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <span class="text-sm font-medium">{{ session('success') }}</span>
+            </div>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="fixed bottom-4 right-4 z-50">
+            <div class="bg-gray-900 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-3">
+                <div class="bg-red-500/20 text-red-400 p-1.5 rounded-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <span class="text-sm font-medium">{{ $errors->first() }}</span>
+            </div>
+        </div>
+    @endif
 </x-app-layout>

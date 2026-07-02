@@ -90,10 +90,6 @@
                     $prediksi = $mahasiswa->prediksiKelulusan;
                     $dataTambahan = $mahasiswa->dataTambahan;
                     
-                    // Helpers Konversi Level
-                    $skalaMap = [1 => 'Sangat Kurang', 2 => 'Kurang', 3 => 'Cukup', 4 => 'Baik', 5 => 'Sangat Baik'];
-                    $skalaColor = [1 => 'text-red-600 bg-red-50', 2 => 'text-orange-600 bg-orange-50', 3 => 'text-amber-600 bg-amber-50', 4 => 'text-green-600 bg-green-50', 5 => 'text-emerald-600 bg-emerald-50'];
-                    
                     $isTepatWaktu = $prediksi && $prediksi->status_risiko == 'Rendah';
                     $isBerisiko = $prediksi && $prediksi->status_risiko == 'Tinggi';
                 @endphp
@@ -213,45 +209,50 @@
                                     
                                     <!-- IPK -->
                                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
-                                        <p class="text-xs text-slate-500 font-semibold uppercase mb-1">IPK Terakhir</p>
-                                        <p class="text-2xl font-black text-slate-800">{{ $dataTambahan->ip_terakhir }}</p>
+                                        <p class="text-xs text-slate-500 font-semibold uppercase mb-2">IPK Terakhir</p>
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->ip_terakhir }}</span>
                                     </div>
                                     
                                     <!-- Organisasi -->
                                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
                                         <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Organisasi</p>
-                                        @if($dataTambahan->keaktifan_organisasi)
-                                            <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-100 text-primary-700">Aktif</span>
-                                        @else
-                                            <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-slate-200 text-slate-600">Tidak Aktif</span>
-                                        @endif
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->keaktifan_organisasi }}</span>
+                                    </div>
+
+                                    <!-- Pengaruh Organisasi -->
+                                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
+                                        <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Pengaruh Org.</p>
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->pengaruh_organisasi }}</span>
                                     </div>
 
                                     <!-- Asal Sekolah -->
                                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
-                                        <p class="text-xs text-slate-500 font-semibold uppercase mb-1">Asal Sekolah</p>
-                                        <p class="text-lg font-bold text-slate-700">{{ $dataTambahan->asal_sekolah }}</p>
+                                        <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Asal Sekolah</p>
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->asal_sekolah }}</span>
                                     </div>
 
                                     <!-- Kondisi Ekonomi -->
                                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
                                         <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Ekonomi</p>
-                                        @php $val = $dataTambahan->kondisi_ekonomi; @endphp
-                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold {{ $skalaColor[$val] }}">{{ $skalaMap[$val] }}</span>
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->kondisi_ekonomi }}</span>
                                     </div>
 
-                                    <!-- Lingkungan Sosial -->
+                                    <!-- Dukungan Keluarga -->
                                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
-                                        <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Sosial</p>
-                                        @php $val = $dataTambahan->lingkungan_sosial; @endphp
-                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold {{ $skalaColor[$val] }}">{{ $skalaMap[$val] }}</span>
+                                        <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Keluarga</p>
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->lingkungan_sosial }}</span>
+                                    </div>
+
+                                    <!-- Lingkungan Pertemanan -->
+                                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
+                                        <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Pertemanan</p>
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->lingkungan_pertemanan }}</span>
                                     </div>
 
                                     <!-- Layanan Akademik -->
                                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
                                         <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Layanan Akademik</p>
-                                        @php $val = $dataTambahan->layanan_akademik; @endphp
-                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold {{ $skalaColor[$val] }}">{{ $skalaMap[$val] }}</span>
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->layanan_akademik }}</span>
                                     </div>
 
                                 </div>

@@ -35,12 +35,14 @@ class DataLatihController extends Controller
             'nama' => 'required|string|max:255',
             'angkatan' => 'required|integer|min:2000|max:'.(date('Y') + 1),
             'semester_lulus' => 'required|integer|min:7|max:14',
-            'ip_terakhir' => 'required|numeric|min:0|max:4',
-            'kondisi_ekonomi' => 'required|integer|min:1|max:5',
-            'lingkungan_sosial' => 'required|integer|min:1|max:5',
-            'keaktifan_organisasi' => 'required|boolean',
-            'layanan_akademik' => 'required|integer|min:1|max:5',
-            'asal_sekolah' => 'required|in:SMA,SMK,MA,Lainnya',
+            'ip_terakhir' => 'required|string',
+            'kondisi_ekonomi' => 'required|string',
+            'lingkungan_sosial' => 'required|string',
+            'lingkungan_pertemanan' => 'required|string',
+            'keaktifan_organisasi' => 'required|string',
+            'pengaruh_organisasi' => 'required|string',
+            'layanan_akademik' => 'required|string',
+            'asal_sekolah' => 'required|string',
         ]);
 
         $mhs = Mahasiswa::create([
@@ -55,16 +57,19 @@ class DataLatihController extends Controller
             'ip_terakhir' => $validated['ip_terakhir'],
             'kondisi_ekonomi' => $validated['kondisi_ekonomi'],
             'lingkungan_sosial' => $validated['lingkungan_sosial'],
+            'lingkungan_pertemanan' => $validated['lingkungan_pertemanan'],
             'keaktifan_organisasi' => $validated['keaktifan_organisasi'],
+            'pengaruh_organisasi' => $validated['pengaruh_organisasi'],
             'layanan_akademik' => $validated['layanan_akademik'],
             'asal_sekolah' => $validated['asal_sekolah'],
         ]);
 
         $label = $validated['semester_lulus'] <= 8 ? 'Tepat Waktu' : 'Tidak Tepat Waktu';
 
-        $mhs->prediksiKelulusan()->create([
-            'label_aktual' => $label,
-        ]);
+        $mhs->prediksiKelulusan()->updateOrCreate(
+            ['mahasiswa_id' => $mhs->id],
+            ['label_aktual' => $label]
+        );
 
         return redirect()->route('data-latih.index')->with('success', 'Data Latih berhasil ditambahkan.');
     }
@@ -82,12 +87,14 @@ class DataLatihController extends Controller
             'nama' => 'required|string|max:255',
             'angkatan' => 'required|integer|min:2000|max:'.(date('Y') + 1),
             'semester_lulus' => 'required|integer|min:7|max:14',
-            'ip_terakhir' => 'required|numeric|min:0|max:4',
-            'kondisi_ekonomi' => 'required|integer|min:1|max:5',
-            'lingkungan_sosial' => 'required|integer|min:1|max:5',
-            'keaktifan_organisasi' => 'required|boolean',
-            'layanan_akademik' => 'required|integer|min:1|max:5',
-            'asal_sekolah' => 'required|in:SMA,SMK,MA,Lainnya',
+            'ip_terakhir' => 'required|string',
+            'kondisi_ekonomi' => 'required|string',
+            'lingkungan_sosial' => 'required|string',
+            'lingkungan_pertemanan' => 'required|string',
+            'keaktifan_organisasi' => 'required|string',
+            'pengaruh_organisasi' => 'required|string',
+            'layanan_akademik' => 'required|string',
+            'asal_sekolah' => 'required|string',
         ]);
 
         $mahasiswa->update([
@@ -104,7 +111,9 @@ class DataLatihController extends Controller
                 'ip_terakhir' => $validated['ip_terakhir'],
                 'kondisi_ekonomi' => $validated['kondisi_ekonomi'],
                 'lingkungan_sosial' => $validated['lingkungan_sosial'],
+                'lingkungan_pertemanan' => $validated['lingkungan_pertemanan'],
                 'keaktifan_organisasi' => $validated['keaktifan_organisasi'],
+                'pengaruh_organisasi' => $validated['pengaruh_organisasi'],
                 'layanan_akademik' => $validated['layanan_akademik'],
                 'asal_sekolah' => $validated['asal_sekolah'],
             ]

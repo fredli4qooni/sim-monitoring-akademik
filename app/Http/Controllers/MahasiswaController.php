@@ -34,12 +34,14 @@ class MahasiswaController extends Controller
             'nama' => 'required|string|max:255',
             'angkatan' => 'required|integer|min:2000|max:'.(date('Y') + 1),
             'status_aktif' => 'required|in:Aktif,Cuti,Lulus,Keluar',
-            'ip_terakhir' => 'required|numeric|min:0|max:4',
-            'kondisi_ekonomi' => 'required|integer|min:1|max:5',
-            'lingkungan_sosial' => 'required|integer|min:1|max:5',
-            'keaktifan_organisasi' => 'required|boolean',
-            'layanan_akademik' => 'required|integer|min:1|max:5',
-            'asal_sekolah' => 'required|in:SMA,SMK,MA,Lainnya',
+            'ip_terakhir' => 'required|string',
+            'kondisi_ekonomi' => 'required|string',
+            'lingkungan_sosial' => 'required|string',
+            'lingkungan_pertemanan' => 'required|string',
+            'keaktifan_organisasi' => 'required|string',
+            'pengaruh_organisasi' => 'required|string',
+            'layanan_akademik' => 'required|string',
+            'asal_sekolah' => 'required|string',
         ]);
 
         $mhs = Mahasiswa::create([
@@ -53,7 +55,9 @@ class MahasiswaController extends Controller
             'ip_terakhir' => $validated['ip_terakhir'],
             'kondisi_ekonomi' => $validated['kondisi_ekonomi'],
             'lingkungan_sosial' => $validated['lingkungan_sosial'],
+            'lingkungan_pertemanan' => $validated['lingkungan_pertemanan'],
             'keaktifan_organisasi' => $validated['keaktifan_organisasi'],
+            'pengaruh_organisasi' => $validated['pengaruh_organisasi'],
             'layanan_akademik' => $validated['layanan_akademik'],
             'asal_sekolah' => $validated['asal_sekolah'],
         ]);
@@ -76,12 +80,14 @@ class MahasiswaController extends Controller
             'nama' => 'required|string|max:255',
             'angkatan' => 'required|integer|min:2000|max:'.(date('Y') + 1),
             'status_aktif' => 'required|in:Aktif,Cuti,Lulus,Keluar',
-            'ip_terakhir' => 'required|numeric|min:0|max:4',
-            'kondisi_ekonomi' => 'required|integer|min:1|max:5',
-            'lingkungan_sosial' => 'required|integer|min:1|max:5',
-            'keaktifan_organisasi' => 'required|boolean',
-            'layanan_akademik' => 'required|integer|min:1|max:5',
-            'asal_sekolah' => 'required|in:SMA,SMK,MA,Lainnya',
+            'ip_terakhir' => 'required|string',
+            'kondisi_ekonomi' => 'required|string',
+            'lingkungan_sosial' => 'required|string',
+            'lingkungan_pertemanan' => 'required|string',
+            'keaktifan_organisasi' => 'required|string',
+            'pengaruh_organisasi' => 'required|string',
+            'layanan_akademik' => 'required|string',
+            'asal_sekolah' => 'required|string',
         ]);
 
         $mahasiswa->update([
@@ -97,7 +103,9 @@ class MahasiswaController extends Controller
                 'ip_terakhir' => $validated['ip_terakhir'],
                 'kondisi_ekonomi' => $validated['kondisi_ekonomi'],
                 'lingkungan_sosial' => $validated['lingkungan_sosial'],
+                'lingkungan_pertemanan' => $validated['lingkungan_pertemanan'],
                 'keaktifan_organisasi' => $validated['keaktifan_organisasi'],
+                'pengaruh_organisasi' => $validated['pengaruh_organisasi'],
                 'layanan_akademik' => $validated['layanan_akademik'],
                 'asal_sekolah' => $validated['asal_sekolah'],
             ]
