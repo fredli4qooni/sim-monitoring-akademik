@@ -229,9 +229,10 @@
                              @mousedown="isDown = true; startX = $event.pageX - $refs.container.offsetLeft; scrollLeft = $refs.container.scrollLeft; startY = $event.pageY - $refs.container.offsetTop; scrollTop = $refs.container.scrollTop;"
                              @mouseleave="isDown = false"
                              @mouseup="isDown = false"
-                             @mousemove="if(!isDown) return; $event.preventDefault(); const x = $event.pageX - $refs.container.offsetLeft; const walkX = (x - startX) * 1.5; $refs.container.scrollLeft = scrollLeft - walkX; const y = $event.pageY - $refs.container.offsetTop; const walkY = (y - startY) * 1.5; $refs.container.scrollTop = scrollTop - walkY;">
+                             @mousemove="if(!isDown) return; $event.preventDefault(); const x = $event.pageX - $refs.container.offsetLeft; const walkX = (x - startX) * 1.5; $refs.container.scrollLeft = scrollLeft - walkX; const y = $event.pageY - $refs.container.offsetTop; const walkY = (y - startY) * 1.5; $refs.container.scrollTop = scrollTop - walkY;"
+                             @wheel.prevent="const delta = $event.deltaY > 0 ? -0.05 : 0.05; zoom = Math.min(Math.max(0.2, zoom + delta), 4);">
                              
-                            <div :style="`transform: scale(${zoom}); transform-origin: top center; transition: transform 0.15s ease-out;`" class="flex justify-center p-8 min-w-max min-h-max">
+                            <div :style="`transform: scale(${zoom}); transform-origin: top center; transition: transform 0.1s ease-out;`" class="flex justify-center p-8 min-w-max min-h-max">
                                 @if($rules->count() > 0)
                                     <pre class="mermaid bg-transparent border-0 text-sm m-0">
 graph TD
