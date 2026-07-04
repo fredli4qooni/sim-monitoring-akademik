@@ -277,8 +277,16 @@ graph TD
                     startOnLoad: true, 
                     theme: 'default',
                     securityLevel: 'loose',
+                    flowchart: { useMaxWidth: false }
                 });
             </script>
+            <style>
+                /* Mencegah SVG menyusut dan memaksanya menggunakan ukuran aslinya */
+                .mermaid svg {
+                    max-width: none !important;
+                    height: auto !important;
+                }
+            </style>
 
     </div>
 </x-app-layout>
