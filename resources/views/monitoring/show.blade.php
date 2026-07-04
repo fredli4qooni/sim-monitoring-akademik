@@ -28,9 +28,9 @@
         </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Hasil Prediksi -->
-                <div class="lg:col-span-4 space-y-6">
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100/60 dark:border-slate-700 text-center h-full flex flex-col justify-center relative overflow-hidden group hover:border-primary-200 transition-colors duration-300">
+                <!-- Hasil Prediksi & Rule -->
+                <div class="lg:col-span-4 space-y-6 flex flex-col">
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100/60 dark:border-slate-700 text-center flex flex-col justify-center relative overflow-hidden group hover:border-primary-200 transition-colors duration-300">
                         <div class="absolute inset-0 bg-primary-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         <div class="relative z-10">
                             <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-6 border-b border-slate-100 pb-3 flex items-center justify-center gap-2">
@@ -58,6 +58,49 @@
                                     {{ optional($selectedMahasiswa->prediksiKelulusan)->probabilitas ? number_format(optional($selectedMahasiswa->prediksiKelulusan)->probabilitas, 2).'%' : '81,45%' }}
                                 </p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Aturan C4.5 -->
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100/60 dark:border-slate-700 flex-1">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                            Aturan Decision Tree (Rule)
+                        </h3>
+                        <div class="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl text-sm font-mono text-slate-800 dark:text-slate-300 leading-relaxed shadow-inner border border-slate-100">
+                            @php
+                                $attrMap = [
+                                    'ipk' => 'IP Terakhir',
+                                    'ekonomi' => 'Kondisi Ekonomi',
+                                    'sosial' => 'Lingkungan Sosial',
+                                    'organisasi' => 'Keaktifan Organisasi',
+                                    'layanan' => 'Layanan Akademik',
+                                    'sekolah' => 'Asal Sekolah',
+                                ];
+                            @endphp
+                            @if(isset($predictionDetails['rule_path']) && count($predictionDetails['rule_path']) > 0)
+                                @foreach($predictionDetails['rule_path'] as $idx => $step)
+                                    @if($step['type'] == 'condition')
+                                        @if($idx == 0)
+                                            <span class="text-blue-600 font-bold">IF</span> {{ $attrMap[$step['attribute']] ?? $step['attribute'] }} = {{ $step['condition'] }} <br>
+                                        @else
+                                            <span class="text-blue-600 font-bold">AND</span> {{ $attrMap[$step['attribute']] ?? $step['attribute'] }} = {{ $step['condition'] }} <br>
+                                        @endif
+                                    @elseif($step['type'] == 'conclusion')
+                                        <div class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                                            <span class="text-indigo-600 font-bold">THEN</span> <br>
+                                            <span class="font-bold text-base {{ $step['label'] == 'Tepat Waktu' ? 'text-green-600' : 'text-red-600' }}">{{ $step['label'] }}</span>
+                                        </div>
+                                    @elseif($step['type'] == 'fallback')
+                                        <div class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                                            <span class="text-orange-500 font-bold">FALLBACK THEN</span> <br>
+                                            <span class="font-bold text-base">{{ $step['label'] }}</span>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @else
+                                <span class="italic text-gray-400">Belum ada rule / Model belum ditraining.</span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -141,55 +184,10 @@
                 </div>
             </div>
 
-            <!-- Bagian Bawah: Rules & Chart -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
-                <!-- Aturan C4.5 -->
-                <div class="lg:col-span-4">
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100/60 dark:border-slate-700 h-full">
-                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                            Aturan Decision Tree (Rule)
-                        </h3>
-                        <div class="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-2xl text-sm font-mono text-slate-800 dark:text-slate-300 leading-relaxed shadow-inner border border-slate-100">
-                            @php
-                                $attrMap = [
-                                    'ipk' => 'IP Terakhir',
-                                    'ekonomi' => 'Kondisi Ekonomi',
-                                    'sosial' => 'Lingkungan Sosial',
-                                    'organisasi' => 'Keaktifan Organisasi',
-                                    'layanan' => 'Layanan Akademik',
-                                    'sekolah' => 'Asal Sekolah',
-                                ];
-                            @endphp
-                            @if(isset($predictionDetails['rule_path']) && count($predictionDetails['rule_path']) > 0)
-                                @foreach($predictionDetails['rule_path'] as $idx => $step)
-                                    @if($step['type'] == 'condition')
-                                        @if($idx == 0)
-                                            <span class="text-blue-600 font-bold">IF</span> {{ $attrMap[$step['attribute']] ?? $step['attribute'] }} = {{ $step['condition'] }} <br>
-                                        @else
-                                            <span class="text-blue-600 font-bold">AND</span> {{ $attrMap[$step['attribute']] ?? $step['attribute'] }} = {{ $step['condition'] }} <br>
-                                        @endif
-                                    @elseif($step['type'] == 'conclusion')
-                                        <div class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                                            <span class="text-indigo-600 font-bold">THEN</span> <br>
-                                            <span class="font-bold text-base {{ $step['label'] == 'Tepat Waktu' ? 'text-green-600' : 'text-red-600' }}">{{ $step['label'] }}</span>
-                                        </div>
-                                    @elseif($step['type'] == 'fallback')
-                                        <div class="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                                            <span class="text-orange-500 font-bold">FALLBACK THEN</span> <br>
-                                            <span class="font-bold text-base">{{ $step['label'] }}</span>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            @else
-                                <span class="italic text-gray-400">Belum ada rule / Model belum ditraining.</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
+            <!-- Bagian Bawah: Chart Full Width -->
+            <div class="mt-6">
                 <!-- Diagram C4.5 -->
-                <div class="lg:col-span-8">
+                <div class="w-full">
                     <div x-data="{ zoom: 1, fullScreen: false, isDown: false, startX: 0, scrollLeft: 0, startY: 0, scrollTop: 0 }" 
                          :class="fullScreen ? 'fixed inset-0 z-50 bg-white dark:bg-slate-900 p-4 md:p-8 flex flex-col overflow-hidden' : 'bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100/60 dark:border-slate-700 h-full relative flex flex-col'"
                          class="transition-all duration-300">
