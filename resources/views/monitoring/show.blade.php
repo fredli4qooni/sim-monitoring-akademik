@@ -190,15 +190,50 @@
 
                 <!-- Diagram C4.5 -->
                 <div class="lg:col-span-8">
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100/60 dark:border-slate-700 h-full overflow-x-auto relative">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-primary-500"></div>
-                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
-                            Grafik Pohon Keputusan
-                        </h3>
+                    <div x-data="{ zoom: 1, fullScreen: false, isDown: false, startX: 0, scrollLeft: 0, startY: 0, scrollTop: 0 }" 
+                         :class="fullScreen ? 'fixed inset-0 z-50 bg-white dark:bg-slate-900 p-4 md:p-8 flex flex-col overflow-hidden' : 'bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100/60 dark:border-slate-700 h-full relative flex flex-col'"
+                         class="transition-all duration-300">
+                        <div x-show="!fullScreen" class="absolute top-0 left-0 w-full h-1 bg-primary-500"></div>
                         
-                        @if($rules->count() > 0)
-                            <pre class="mermaid flex justify-center py-4 bg-transparent border-0 text-sm">
+                        <!-- Header with Controls -->
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-3 mb-4 gap-4">
+                            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                                Grafik Pohon Keputusan
+                            </h3>
+                            
+                            <div class="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200 shadow-sm">
+                                <button @click="zoom = Math.max(0.3, zoom - 0.1)" class="p-2 text-slate-600 hover:bg-white hover:shadow-sm rounded-lg transition-all" title="Zoom Out">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                                </button>
+                                <span class="text-xs font-bold text-slate-500 w-12 text-center" x-text="Math.round(zoom * 100) + '%'"></span>
+                                <button @click="zoom = Math.min(3, zoom + 0.1)" class="p-2 text-slate-600 hover:bg-white hover:shadow-sm rounded-lg transition-all" title="Zoom In">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                </button>
+                                <div class="w-px h-4 bg-slate-300 mx-1"></div>
+                                <button @click="zoom = 1" class="p-2 text-slate-600 hover:bg-white hover:shadow-sm rounded-lg transition-all" title="Reset Zoom">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                </button>
+                                <div class="w-px h-4 bg-slate-300 mx-1"></div>
+                                <button @click="fullScreen = !fullScreen" class="p-2 text-primary-600 hover:bg-primary-50 hover:shadow-sm rounded-lg transition-all" title="Full Screen">
+                                    <svg x-show="!fullScreen" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                                    <svg x-show="fullScreen" style="display: none;" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Pan & Zoom Container -->
+                        <div class="overflow-auto flex-1 relative cursor-grab active:cursor-grabbing border border-slate-100 rounded-xl bg-slate-50/50" 
+                             style="min-height: 300px;"
+                             x-ref="container"
+                             @mousedown="isDown = true; startX = $event.pageX - $refs.container.offsetLeft; scrollLeft = $refs.container.scrollLeft; startY = $event.pageY - $refs.container.offsetTop; scrollTop = $refs.container.scrollTop;"
+                             @mouseleave="isDown = false"
+                             @mouseup="isDown = false"
+                             @mousemove="if(!isDown) return; $event.preventDefault(); const x = $event.pageX - $refs.container.offsetLeft; const walkX = (x - startX) * 1.5; $refs.container.scrollLeft = scrollLeft - walkX; const y = $event.pageY - $refs.container.offsetTop; const walkY = (y - startY) * 1.5; $refs.container.scrollTop = scrollTop - walkY;">
+                             
+                            <div :style="`transform: scale(${zoom}); transform-origin: top center; transition: transform 0.15s ease-out;`" class="flex justify-center p-8 min-w-max min-h-max">
+                                @if($rules->count() > 0)
+                                    <pre class="mermaid bg-transparent border-0 text-sm m-0">
 graph TD
 @foreach($rules as $rule)
     @if($rule->label)
@@ -217,10 +252,12 @@ graph TD
         node{{ $rule->parent_node }} -- "{{ $rule->condition }}" --> node{{ $rule->id }}
     @endif
 @endforeach
-                            </pre>
-                        @else
-                            <div class="text-center py-8 text-gray-400 italic">Pohon keputusan kosong. Lakukan training model terlebih dahulu.</div>
-                        @endif
+                                    </pre>
+                                @else
+                                    <div class="text-center py-8 text-gray-400 italic flex-1 flex items-center justify-center">Pohon keputusan kosong. Lakukan training model terlebih dahulu.</div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

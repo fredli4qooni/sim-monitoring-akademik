@@ -68,7 +68,7 @@
     <div class="header">
         <h1>LAPORAN MONITORING PREDIKSI KELULUSAN MAHASISWA</h1>
         <p>Sistem Pemantauan Akademik Menggunakan Decision Tree C4.5</p>
-        <p>Dicetak pada: {{ date('d F Y H:i') }}</p>
+        <p>Dicetak pada: {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y HH:mm') }} WIB</p>
     </div>
 
     <table>
@@ -93,7 +93,7 @@
                     <td>{{ $mhs->nim }}</td>
                     <td>{{ $mhs->nama }}</td>
                     <td class="text-center">{{ $mhs->angkatan }}</td>
-                    <td class="text-center">{{ $ipkAvg ? number_format($ipkAvg, 2) : '-' }}</td>
+                    <td class="text-center">{{ $ipkAvg ?: '-' }}</td>
                     <td>
                         @if($prediksi)
                             @if($prediksi->prediksi_sistem == 'Tepat Waktu')
