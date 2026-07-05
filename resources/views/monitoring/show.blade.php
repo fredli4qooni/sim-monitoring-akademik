@@ -232,23 +232,52 @@
                              
                             <div :style="`transform: scale(${zoom}); transform-origin: top center; transition: transform 0.1s ease-out;`" class="flex justify-center p-8 min-w-max min-h-max">
                                 @if($rules->count() > 0)
+                                    @php
+                                        $pathNodeIds = [];
+                                        if(isset($predictionDetails['rule_path'])) {
+                                            foreach($predictionDetails['rule_path'] as $step) {
+                                                if(isset($step['node_id'])) {
+                                                    $pathNodeIds[] = $step['node_id'];
+                                                }
+                                            }
+                                        }
+                                        $linkCount = 0;
+                                    @endphp
                                     <pre class="mermaid bg-transparent border-0 text-sm m-0">
 graph TD
 @foreach($rules as $rule)
     @if($rule->label)
         node{{ $rule->id }}(["{{ $rule->label }}"])
-        @if($rule->label == 'Tepat Waktu')
-            style node{{ $rule->id }} fill:#d1fae5,stroke:#10b981
+        @if(in_array($rule->id, $pathNodeIds))
+            @if($rule->label == 'Tepat Waktu')
+                style node{{ $rule->id }} fill:#d1fae5,stroke:#059669,stroke-width:4px,color:#065f46
+            @else
+                style node{{ $rule->id }} fill:#fee2e2,stroke:#dc2626,stroke-width:4px,color:#991b1b
+            @endif
         @else
-            style node{{ $rule->id }} fill:#fee2e2,stroke:#ef4444
+            @if($rule->label == 'Tepat Waktu')
+                style node{{ $rule->id }} fill:#ecfdf5,stroke:#a7f3d0,color:#34d399
+            @else
+                style node{{ $rule->id }} fill:#fef2f2,stroke:#fecaca,color:#f87171
+            @endif
         @endif
     @else
         node{{ $rule->id }}["{{ $attrMap[$rule->attribute] ?? $rule->attribute }}?"]
-        style node{{ $rule->id }} fill:#f3f4f6,stroke:#9ca3af
+        @if(in_array($rule->id, $pathNodeIds))
+            style node{{ $rule->id }} fill:#e0f2fe,stroke:#0284c7,stroke-width:4px,color:#0c4a6e
+        @else
+            style node{{ $rule->id }} fill:#f9fafb,stroke:#e5e7eb,color:#9ca3af
+        @endif
     @endif
 
     @if($rule->parent_node)
         node{{ $rule->parent_node }} -- "{{ $rule->condition }}" --> node{{ $rule->id }}
+        @if(in_array($rule->parent_node, $pathNodeIds) && in_array($rule->id, $pathNodeIds))
+            linkStyle {{ $linkCount }} stroke:#0284c7,stroke-width:4px,color:#0284c7
+        @else
+            linkStyle {{ $linkCount }} stroke:#e5e7eb,stroke-width:2px,color:#9ca3af
+        @endif
+        @php $linkCount++; @endphp
     @endif
 @endforeach
                                     </pre>

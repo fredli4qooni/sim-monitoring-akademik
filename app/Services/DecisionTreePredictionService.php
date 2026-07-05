@@ -65,7 +65,8 @@ class DecisionTreePredictionService
         if ($node->label !== null) {
             $path[] = [
                 'type' => 'conclusion',
-                'label' => $node->label
+                'label' => $node->label,
+                'node_id' => $node->id
             ];
             return $node->label;
         }
@@ -85,7 +86,8 @@ class DecisionTreePredictionService
             $fallback = $this->getMajorityFallback($node->id);
             $path[] = [
                 'type' => 'fallback',
-                'label' => $fallback
+                'label' => $fallback,
+                'node_id' => $node->id
             ];
             return $fallback;
         }
@@ -93,7 +95,8 @@ class DecisionTreePredictionService
         $path[] = [
             'type' => 'condition',
             'attribute' => $attribute,
-            'condition' => $value
+            'condition' => $value,
+            'node_id' => $node->id
         ];
 
         return $this->traverseTreeWithPath($childNode, $data, $path);
