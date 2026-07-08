@@ -12,7 +12,7 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            ['key' => 'app_name', 'value' => 'SPK UIN RIL', 'type' => 'string', 'description' => 'Nama Singkat Aplikasi'],
+            ['key' => 'app_name', 'value' => 'Sistem Monitoring Kinerja Akademik Mahasiswa', 'type' => 'string', 'description' => 'Nama Aplikasi'],
             ['key' => 'maintenance_mode', 'value' => '0', 'type' => 'boolean', 'description' => 'Aktifkan mode perbaikan sistem'],
             
             // Parameter Prediksi

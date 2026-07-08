@@ -13,7 +13,7 @@
                         <img src="{{ asset('images/ilustrasi.png') }}" alt="Ilustrasi SPK" class="w-full max-w-sm mx-auto object-contain drop-shadow-sm hover:scale-105 transition-transform duration-500">
                     </div>
 
-                    <h1 class="text-3xl font-heading font-bold text-slate-900 mb-3 tracking-tight">SPK Kinerja Akademik</h1>
+                    <h1 class="text-3xl font-heading font-bold text-slate-900 mb-3 tracking-tight">Sistem Monitoring Kinerja Akademik Mahasiswa</h1>
                     <p class="text-base text-slate-500 font-light max-w-md mx-auto leading-relaxed">
                         Sistem Pendukung Keputusan cerdas berbasis Decision Tree C4.5 untuk memonitor dan memprediksi kelulusan mahasiswa UIN Raden Intan Lampung.
                     </p>
@@ -31,7 +31,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
                         </svg>
                     </div>
-                    <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">SPK UIN RIL</h2>
+                    <h2 class="text-2xl font-heading font-bold text-gray-900 dark:text-white">Sistem Monitoring Kinerja Akademik Mahasiswa</h2>
                 </div>
 
                 <div class="mb-6">
