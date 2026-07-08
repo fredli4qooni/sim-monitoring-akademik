@@ -148,7 +148,7 @@
                                             <div class="mt-0.5 text-green-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg></div>
                                             <span>Pertahankan konsistensi nilai IPK Anda saat ini.</span>
                                         </li>
-                                        @if(optional($dataTambahan)->keaktifan_organisasi)
+                                        @if(optional($dataTambahan)->keaktifan_organisasi == 'Aktif')
                                         <li class="flex items-start gap-2">
                                             <div class="mt-0.5 text-green-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg></div>
                                             <span>Keaktifan organisasi Anda terbukti tidak mengganggu akademik. Lanjutkan!</span>
@@ -161,7 +161,7 @@
                                             <span class="font-medium text-red-700">Tingkatkan fokus belajar Anda! IPK saat ini berada di bawah batas optimal.</span>
                                         </li>
                                         @endif
-                                        @if(optional($dataTambahan)->keaktifan_organisasi)
+                                        @if(optional($dataTambahan)->keaktifan_organisasi == 'Aktif')
                                         <li class="flex items-start gap-2">
                                             <div class="mt-0.5 text-orange-500"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9a1 1 0 112 0v4a1 1 0 11-2 0V9zm1 6a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path></svg></div>
                                             <span>Sistem mendeteksi Anda aktif organisasi. Pastikan hal ini tidak mengganggu waktu pengerjaan tugas akhir.</span>
