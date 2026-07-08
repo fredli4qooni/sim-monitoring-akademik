@@ -65,12 +65,12 @@
                         <form method="POST" action="{{ route('guest.cek-prediksi.check') }}" class="space-y-6">
                             @csrf
                             <div>
-                                <label for="nim" class="block text-sm font-semibold text-slate-700 mb-2">Nomor Induk Mahasiswa (NIM)</label>
+                                <label for="nim" class="block text-sm font-semibold text-slate-700 mb-2">Nomor Pokok Mahasiswa (NPM)</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                         <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z"></path></svg>
                                     </div>
-                                    <input type="text" name="nim" id="nim" value="{{ old('nim') }}" required autofocus class="pl-11 w-full rounded-xl border-slate-200 shadow-sm focus:border-primary-500 focus:ring-primary-500 py-3 text-slate-800 font-medium placeholder:text-slate-400 placeholder:font-normal" placeholder="Masukkan NIM Anda...">
+                                    <input type="text" name="nim" id="nim" value="{{ old('nim') }}" required autofocus class="pl-11 w-full rounded-xl border-slate-200 shadow-sm focus:border-primary-500 focus:ring-primary-500 py-3 text-slate-800 font-medium placeholder:text-slate-400 placeholder:font-normal" placeholder="Masukkan NPM Anda...">
                                 </div>
                             </div>
 
@@ -190,7 +190,7 @@
                                 <div class="flex-1 text-center sm:text-left">
                                     <h3 class="text-xl font-bold text-slate-800">{{ $mahasiswa->nama }}</h3>
                                     <div class="flex flex-wrap justify-center sm:justify-start gap-3 mt-3">
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">NIM: {{ $mahasiswa->nim }}</span>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">NPM: {{ $mahasiswa->nim }}</span>
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">Angkatan: {{ $mahasiswa->angkatan }}</span>
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $mahasiswa->status_aktif == 'Aktif' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">Status: {{ $mahasiswa->status_aktif }}</span>
                                     </div>

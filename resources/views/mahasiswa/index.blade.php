@@ -34,7 +34,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="w-5 h-5 text-slate-400 group-focus-within:text-primary-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="text" name="search" value="{{ $search }}" class="pl-10 block w-full py-2.5 rounded-xl border-slate-200 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm transition-shadow focus:shadow-md focus:shadow-primary-500/10" placeholder="Cari Nama / NIM Mahasiswa...">
+                    <input type="text" name="search" value="{{ $search }}" class="pl-10 block w-full py-2.5 rounded-xl border-slate-200 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm transition-shadow focus:shadow-md focus:shadow-primary-500/10" placeholder="Cari Nama / NPM Mahasiswa...">
                 </form>
             </div>
 

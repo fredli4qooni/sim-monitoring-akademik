@@ -75,7 +75,7 @@
         <thead>
             <tr>
                 <th width="5%">No</th>
-                <th width="15%">NIM</th>
+                <th width="15%">NPM</th>
                 <th width="30%">Nama Mahasiswa</th>
                 <th width="10%" class="text-center">Angkatan</th>
                 <th width="15%" class="text-center">IP Terakhir</th>

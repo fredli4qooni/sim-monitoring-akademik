@@ -23,7 +23,7 @@ class PublicPredictionController extends Controller
             ->first();
 
         if (!$mahasiswa) {
-            return back()->withInput()->with('error', 'Data mahasiswa dengan NIM tersebut tidak ditemukan atau belum terdaftar.');
+            return back()->withInput()->with('error', 'Data mahasiswa dengan NPM tersebut tidak ditemukan atau belum terdaftar.');
         }
 
         return view('guest.cek-prediksi', compact('mahasiswa'));
