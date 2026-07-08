@@ -9,5 +9,5 @@ class C45Rule extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['parent_node', 'attribute', 'condition', 'label', 'entropy', 'gain'];
+    protected $fillable = ['parent_node', 'attribute', 'condition', 'label', 'entropy', 'gain', 'split_info', 'gain_ratio'];
 }

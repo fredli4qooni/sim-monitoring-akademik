@@ -36,7 +36,9 @@ class DecisionTreeTrainingService
                 'condition' => $conditionValue,
                 'label' => reset($uniqueLabels),
                 'entropy' => 0,
-                'gain' => 0
+                'gain' => 0,
+                'split_info' => 0,
+                'gain_ratio' => 0
             ]);
             return;
         }
@@ -53,7 +55,9 @@ class DecisionTreeTrainingService
                 'condition' => $conditionValue,
                 'label' => $majorityLabel,
                 'entropy' => 0,
-                'gain' => 0
+                'gain' => 0,
+                'split_info' => 0,
+                'gain_ratio' => 0
             ]);
             return;
         }
@@ -61,16 +65,24 @@ class DecisionTreeTrainingService
         // 3. Hitung Entropy Total
         $entropyTotal = $this->calculateEntropy($dataset);
 
-        // 4. Hitung Information Gain untuk setiap atribut
+        // 4. Hitung Information Gain, Split Info, dan Gain Ratio untuk setiap atribut
         $gains = [];
+        $gainRatios = [];
+        $splitInfos = [];
         foreach ($attributes as $attribute) {
-            $gains[$attribute] = $this->calculateGain($dataset, $attribute, $entropyTotal);
+            $calc = $this->calculateGainAndSplitInfo($dataset, $attribute, $entropyTotal);
+            $gains[$attribute] = $calc['gain'];
+            $splitInfos[$attribute] = $calc['split_info'];
+            $gainRatios[$attribute] = $calc['gain_ratio'];
         }
 
-        // 5. Pilih atribut dengan Gain tertinggi
-        arsort($gains);
-        $bestAttribute = array_key_first($gains);
+        // 5. Pilih atribut dengan Gain Ratio tertinggi (Kunci dari Algoritma C4.5)
+        arsort($gainRatios);
+        $bestAttribute = array_key_first($gainRatios);
+        
         $bestGain = $gains[$bestAttribute];
+        $bestSplitInfo = $splitInfos[$bestAttribute];
+        $bestGainRatio = $gainRatios[$bestAttribute];
 
         // 6. Simpan node (cabang) ke database
         $node = C45Rule::create([
@@ -79,7 +91,9 @@ class DecisionTreeTrainingService
             'condition' => $conditionValue,
             'label' => null, // Ini bukan leaf
             'entropy' => $entropyTotal,
-            'gain' => $bestGain
+            'gain' => $bestGain,
+            'split_info' => $bestSplitInfo,
+            'gain_ratio' => $bestGainRatio
         ]);
 
         // 7. Hapus atribut terbaik dari daftar untuk diproses ke cabang selanjutnya
@@ -114,13 +128,14 @@ class DecisionTreeTrainingService
         return $entropy;
     }
 
-    protected function calculateGain($dataset, $attribute, $entropyTotal)
+    protected function calculateGainAndSplitInfo($dataset, $attribute, $entropyTotal)
     {
         $total = count($dataset);
         $attributeValues = array_column($dataset, $attribute);
         $uniqueValues = array_unique($attributeValues);
 
         $entropyAttribute = 0;
+        $splitInfo = 0;
 
         foreach ($uniqueValues as $value) {
             $subset = array_filter($dataset, function ($row) use ($attribute, $value) {
@@ -128,11 +143,24 @@ class DecisionTreeTrainingService
             });
 
             $subsetTotal = count($subset);
+            $probability = $subsetTotal / $total;
+            
             $subsetEntropy = $this->calculateEntropy($subset);
-
-            $entropyAttribute += ($subsetTotal / $total) * $subsetEntropy;
+            $entropyAttribute += $probability * $subsetEntropy;
+            
+            // C4.5 Split Info Calculation
+            $splitInfo -= $probability * log($probability, 2);
         }
 
-        return $entropyTotal - $entropyAttribute;
+        $gain = $entropyTotal - $entropyAttribute;
+        
+        // Avoid division by zero
+        $gainRatio = $splitInfo > 0 ? $gain / $splitInfo : 0;
+
+        return [
+            'gain' => $gain,
+            'split_info' => $splitInfo,
+            'gain_ratio' => $gainRatio
+        ];
     }
 }

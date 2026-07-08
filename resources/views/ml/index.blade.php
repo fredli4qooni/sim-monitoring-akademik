@@ -39,7 +39,7 @@
                 <div>
                     <h3 class="text-xl font-heading font-bold mb-2">Training Model Baru</h3>
                     <p class="text-primary-100 text-sm opacity-90 leading-relaxed">
-                        Sistem akan mengumpulkan seluruh data historis mahasiswa, mendiskritkan variabel numerik, lalu menghitung Entropy & Information Gain untuk membangun struktur Pohon Keputusan C4.5 yang baru.
+                        Sistem akan mengumpulkan seluruh data historis mahasiswa, mendiskritkan variabel numerik, lalu menghitung Entropy, Split Info, & Gain Ratio untuk membangun struktur Pohon Keputusan C4.5 murni yang baru.
                     </p>
                 </div>
                 
@@ -70,7 +70,7 @@
                             <th class="px-4 py-2 text-left font-semibold text-gray-500">Kondisi (Cabang)</th>
                             <th class="px-4 py-2 text-left font-semibold text-gray-500">Atribut Uji</th>
                             <th class="px-4 py-2 text-left font-semibold text-gray-500">Label Kesimpulan</th>
-                            <th class="px-4 py-2 text-left font-semibold text-gray-500">Gain / Entropy</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-500">Metrik (GR / G / SI / E)</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
@@ -94,7 +94,8 @@
                                     @endif
                                 </td>
                                 <td class="px-4 py-3 text-xs text-gray-500">
-                                    G: {{ number_format($rule->gain, 4) }} <br> E: {{ number_format($rule->entropy, 4) }}
+                                    GR: <span class="font-bold text-primary-600 dark:text-primary-400">{{ number_format($rule->gain_ratio, 4) }}</span><br>
+                                    <span class="text-gray-400">G: {{ number_format($rule->gain, 4) }} | SI: {{ number_format($rule->split_info, 4) }} | E: {{ number_format($rule->entropy, 4) }}</span>
                                 </td>
                             </tr>
                         @endforeach
