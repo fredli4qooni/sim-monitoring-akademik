@@ -62,7 +62,7 @@
 
                 <div class="w-full sm:max-w-md bg-white/80 backdrop-blur-xl shadow-2xl overflow-hidden sm:rounded-3xl border border-white mx-auto">
                     <div class="px-8 py-10">
-                        <form method="POST" action="{{ route('guest.cek-prediksi.check') }}" class="space-y-6">
+                        <form method="POST" action="{{ route('cek-prediksi.check') }}" class="space-y-6">
                             @csrf
                             <div>
                                 <label for="nim" class="block text-sm font-semibold text-slate-700 mb-2">Nomor Pokok Mahasiswa (NPM)</label>

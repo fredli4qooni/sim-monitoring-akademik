@@ -11,11 +11,14 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ParameterController;
 use Illuminate\Support\Facades\Route;
 
-// Landing Page & Prediction Checker (kini dilindungi login)
+// Redirect halaman utama ke login
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', [App\Http\Controllers\PublicPredictionController::class, 'index'])->name('home');
-    Route::get('/cek-prediksi', function () { return redirect()->route('home'); });
-    Route::post('/cek-prediksi', [App\Http\Controllers\PublicPredictionController::class, 'check'])->name('guest.cek-prediksi.check');
+    Route::get('/cek-prediksi', [App\Http\Controllers\PublicPredictionController::class, 'index'])->name('cek-prediksi');
+    Route::post('/cek-prediksi', [App\Http\Controllers\PublicPredictionController::class, 'check'])->name('cek-prediksi.check');
 
     // Redirect pintar untuk dashboard
     Route::get('/dashboard', function () {
