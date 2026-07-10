@@ -20,13 +20,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/cek-prediksi', [App\Http\Controllers\PublicPredictionController::class, 'index'])->name('cek-prediksi');
     Route::post('/cek-prediksi', [App\Http\Controllers\PublicPredictionController::class, 'check'])->name('cek-prediksi.check');
 
-    // Redirect pintar untuk dashboard
-    Route::get('/dashboard', function () {
-        return app(DashboardController::class)->index();
-    })->name('dashboard');
-
     // Rute yang dapat diakses oleh Admin & Kaprodi
     Route::middleware(['role:admin,prodi'])->group(function () {
+        // Redirect pintar untuk dashboard
+        Route::get('/dashboard', function () {
+            return app(DashboardController::class)->index();
+        })->name('dashboard');
         Route::get('mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
 
         Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');

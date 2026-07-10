@@ -27,9 +27,18 @@
                         Pencarian Baru
                     </a>
                     @endif
+                    @if(auth()->user()->role !== 'mahasiswa')
                     <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors shadow-sm">
                         Ke Dashboard
                     </a>
+                    @else
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-colors shadow-sm">
+                            Keluar
+                        </button>
+                    </form>
+                    @endif
                 </div>
             </div>
         </header>
