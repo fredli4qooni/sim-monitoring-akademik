@@ -9,11 +9,27 @@ class PublicPredictionController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+
+        if ($user && $user->role === 'mahasiswa') {
+            $mahasiswa = Mahasiswa::with(['dataTambahan', 'prediksiKelulusan'])
+                ->find($user->mahasiswa_id);
+                
+            if ($mahasiswa) {
+                return view('guest.cek-prediksi', compact('mahasiswa'));
+            }
+        }
+
         return view('guest.cek-prediksi');
     }
 
     public function check(Request $request)
     {
+        $user = auth()->user();
+        if ($user && $user->role === 'mahasiswa') {
+            return redirect()->route('cek-prediksi');
+        }
+
         $request->validate([
             'nim' => 'required|string',
         ]);
