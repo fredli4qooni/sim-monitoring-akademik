@@ -28,6 +28,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        if (auth()->user()->role === 'mahasiswa') {
+            return redirect()->route('cek-prediksi');
+        }
+
         // Selalu arahkan ke dashboard setelah login
         return redirect()->route('dashboard');
     }

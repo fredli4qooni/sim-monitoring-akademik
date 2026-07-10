@@ -22,7 +22,7 @@
 
             <!-- Right Side: Login Form -->
             <div class="flex-1 flex flex-col justify-center p-8 sm:p-12 lg:p-16 bg-white animate-slide-up">
-                <div class="mx-auto w-full max-w-md">
+                <div class="mx-auto w-full max-w-md" x-data="{ tab: 'mahasiswa' }">
                 <!-- Mobile Logo -->
                 <div class="lg:hidden mb-8 text-center">
                     <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 mb-4">
@@ -41,12 +41,26 @@
                     </p>
                 </div>
 
+                <!-- Tab Toggle -->
+                <div class="flex p-1 space-x-1 bg-gray-100 dark:bg-gray-800/50 rounded-xl mb-6">
+                    <button type="button" @click="tab = 'mahasiswa'" 
+                        :class="tab === 'mahasiswa' ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
+                        class="w-full rounded-lg py-2.5 text-sm font-semibold leading-5 transition-all">
+                        Login Mahasiswa
+                    </button>
+                    <button type="button" @click="tab = 'admin'"
+                        :class="tab === 'admin' ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
+                        class="w-full rounded-lg py-2.5 text-sm font-semibold leading-5 transition-all">
+                        Kaprodi / Admin
+                    </button>
+                </div>
+
                 <!-- Peringatan Akses -->
-                <div class="mb-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-400 text-sm flex items-start gap-3">
+                <div x-show="tab === 'admin'" style="display: none;" class="mb-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-400 text-sm flex items-start gap-3">
                     <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <div>
                         <span class="font-bold block mb-0.5 text-amber-900 dark:text-amber-300">Area Terbatas</span>
-                        Portal login ini khusus untuk <strong>Admin</strong> dan <strong>Kaprodi</strong>. 
+                        Portal ini khusus untuk <strong>Admin</strong> dan <strong>Kaprodi</strong>. 
                     </div>
                 </div>
 
@@ -54,9 +68,23 @@
 
                 <form method="POST" action="{{ route('login') }}" class="space-y-6">
                     @csrf
+                    <input type="hidden" name="login_type" :value="tab">
 
-                    <!-- Email Address -->
-                    <div>
+                    <!-- NPM (Mahasiswa) -->
+                    <div x-show="tab === 'mahasiswa'">
+                        <label for="npm" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nomor Pokok Mahasiswa (NPM)</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z"></path></svg>
+                            </div>
+                            <input id="npm" type="text" name="npm" value="{{ old('npm') }}" autocomplete="username" :required="tab === 'mahasiswa'"
+                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition duration-150 ease-in-out shadow-sm" placeholder="Masukkan NPM Anda">
+                        </div>
+                        <x-input-error :messages="$errors->get('npm')" class="mt-2" />
+                    </div>
+
+                    <!-- Email Address (Admin) -->
+                    <div x-show="tab === 'admin'" style="display: none;">
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Kampus</label>
                         <div class="mt-1 relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -65,7 +93,7 @@
                                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                 </svg>
                             </div>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" autocomplete="username" :required="tab === 'admin'"
                                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition duration-150 ease-in-out shadow-sm" placeholder="admin@uinril.ac.id">
                         </div>
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
