@@ -23,12 +23,12 @@
                 </div>
                 <div class="flex gap-2">
                     @if(isset($mahasiswa))
-                    <a href="{{ route('home') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">
+                    <a href="{{ route('cek-prediksi') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">
                         Pencarian Baru
                     </a>
                     @endif
-                    <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors shadow-sm">
-                        Masuk Sistem
+                    <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors shadow-sm">
+                        Ke Dashboard
                     </a>
                 </div>
             </div>
