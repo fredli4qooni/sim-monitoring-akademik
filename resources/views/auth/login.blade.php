@@ -70,22 +70,9 @@
                     @csrf
                     <input type="hidden" name="login_type" :value="tab">
 
-                    <!-- NPM (Mahasiswa) -->
-                    <div x-show="tab === 'mahasiswa'">
-                        <label for="npm" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nomor Pokok Mahasiswa (NPM)</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z"></path></svg>
-                            </div>
-                            <input id="npm" type="text" name="npm" value="{{ old('npm') }}" autocomplete="username" :required="tab === 'mahasiswa'"
-                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition duration-150 ease-in-out shadow-sm" placeholder="Masukkan NPM Anda">
-                        </div>
-                        <x-input-error :messages="$errors->get('npm')" class="mt-2" />
-                    </div>
-
-                    <!-- Email Address (Admin) -->
-                    <div x-show="tab === 'admin'" style="display: none;">
-                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Kampus</label>
+                    <!-- Email Address -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300" x-text="tab === 'mahasiswa' ? 'Email Mahasiswa' : 'Email Kampus'"></label>
                         <div class="mt-1 relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -93,8 +80,8 @@
                                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                 </svg>
                             </div>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" autocomplete="username" :required="tab === 'admin'"
-                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition duration-150 ease-in-out shadow-sm" placeholder="admin@uinril.ac.id">
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" autocomplete="username" required autofocus
+                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition duration-150 ease-in-out shadow-sm" :placeholder="tab === 'mahasiswa' ? '1911010001@student.uinradenintan.ac.id' : 'admin@uinril.ac.id'">
                         </div>
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>

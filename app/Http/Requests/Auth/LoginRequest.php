@@ -21,18 +21,6 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        if ($this->login_type === 'mahasiswa' && $this->filled('npm')) {
-            $this->merge([
-                'email' => $this->npm . '@student.uinradenintan.ac.id',
-            ]);
-        }
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
