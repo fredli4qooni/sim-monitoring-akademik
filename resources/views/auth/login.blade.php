@@ -81,7 +81,7 @@
                                 </svg>
                             </div>
                             <input id="email" type="email" name="email" value="{{ old('email') }}" autocomplete="username" required autofocus
-                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition duration-150 ease-in-out shadow-sm" :placeholder="tab === 'mahasiswa' ? '1911010001@student.uinradenintan.ac.id' : 'admin@uinril.ac.id'">
+                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition duration-150 ease-in-out shadow-sm" :placeholder="tab === 'mahasiswa' ? 'npm@student.uinradenintan.ac.id' : 'admin@uinril.ac.id'">
                         </div>
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
