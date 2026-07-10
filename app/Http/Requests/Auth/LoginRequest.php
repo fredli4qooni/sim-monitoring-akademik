@@ -50,6 +50,20 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $user = Auth::user();
+        
+        if ($this->login_type === 'mahasiswa' && $user->role !== 'mahasiswa') {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => 'Akun ini bukan akun mahasiswa. Silakan gunakan tab Kaprodi/Admin.',
+            ]);
+        } elseif ($this->login_type === 'admin' && $user->role === 'mahasiswa') {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => 'Akun ini adalah akun mahasiswa. Silakan gunakan tab Login Mahasiswa.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 
