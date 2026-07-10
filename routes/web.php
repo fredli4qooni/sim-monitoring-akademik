@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 // Landing Page & Prediction Checker (kini dilindungi login)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [App\Http\Controllers\PublicPredictionController::class, 'index'])->name('home');
+    Route::get('/cek-prediksi', function () { return redirect()->route('home'); });
     Route::post('/cek-prediksi', [App\Http\Controllers\PublicPredictionController::class, 'check'])->name('guest.cek-prediksi.check');
 
     // Redirect pintar untuk dashboard
