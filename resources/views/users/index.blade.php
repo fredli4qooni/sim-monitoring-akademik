@@ -50,9 +50,9 @@
                                     @if($user->role === 'admin')
                                         <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800">Admin</span>
                                     @elseif($user->role === 'prodi')
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-teal-100 text-teal-800">Prodi</span>
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-teal-100 text-teal-800">Kaprodi</span>
                                     @else
-                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">Mahasiswa</span>
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">{{ ucfirst($user->role) }}</span>
                                     @endif
                                 </td>
                                 <td class="py-4 px-6 text-right space-x-2">
