@@ -21,7 +21,12 @@
                         </svg>
                     </div>
                 @endif
-                <span class="ml-3 text-xl font-heading font-extrabold text-slate-900 tracking-tight">{{ \App\Models\Setting::where('key', 'app_name')->value('value') ?? 'SPK UIN RIL' }}</span>
+                <div class="ml-3 flex flex-col justify-center">
+                    <span class="text-lg font-heading font-extrabold text-slate-900 tracking-tight leading-none">SIMAK</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-500 tracking-widest mt-1 max-w-[140px] truncate" title="{{ \App\Models\Setting::where('key', 'app_name')->value('value') ?? 'Sistem Monitoring Kinerja Akademik' }}">
+                        {{ \App\Models\Setting::where('key', 'app_name')->value('value') ?? 'Sistem Monitoring Kinerja Akademik' }}
+                    </span>
+                </div>
             </div>
         </a>
     </div>
