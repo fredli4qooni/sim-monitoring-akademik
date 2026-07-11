@@ -22,23 +22,14 @@
                     <span class="text-xl font-heading font-extrabold text-slate-900 tracking-tight">{{ $appName }}</span>
                 </div>
                 <div class="flex gap-2">
-                    @if(isset($mahasiswa) && auth()->user()->role !== 'mahasiswa')
+                    @if(isset($mahasiswa))
                     <a href="{{ route('cek-prediksi') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">
                         Pencarian Baru
                     </a>
                     @endif
-                    @if(auth()->user()->role !== 'mahasiswa')
                     <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors shadow-sm">
                         Ke Dashboard
                     </a>
-                    @else
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-colors shadow-sm">
-                            Keluar
-                        </button>
-                    </form>
-                    @endif
                 </div>
             </div>
         </header>

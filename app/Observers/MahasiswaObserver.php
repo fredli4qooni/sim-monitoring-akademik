@@ -13,13 +13,7 @@ class MahasiswaObserver
      */
     public function created(Mahasiswa $mahasiswa): void
     {
-        $user = User::create([
-            'name' => $mahasiswa->nama,
-            'email' => $mahasiswa->nim . '@student.uinradenintan.ac.id',
-            'password' => Hash::make($mahasiswa->nim), // Password default adalah NIM
-            'role' => 'mahasiswa',
-            'mahasiswa_id' => $mahasiswa->id,
-        ]);
+        // No longer creates user for mahasiswa
     }
 
     /**
@@ -27,12 +21,7 @@ class MahasiswaObserver
      */
     public function updated(Mahasiswa $mahasiswa): void
     {
-        if ($mahasiswa->user) {
-            $mahasiswa->user->update([
-                'name' => $mahasiswa->nama,
-                'email' => $mahasiswa->nim . '@student.uinradenintan.ac.id',
-            ]);
-        }
+        // No longer updates user for mahasiswa
     }
 
     /**
@@ -40,8 +29,6 @@ class MahasiswaObserver
      */
     public function deleted(Mahasiswa $mahasiswa): void
     {
-        if ($mahasiswa->user) {
-            $mahasiswa->user->delete();
-        }
+        // No longer deletes user for mahasiswa
     }
 }
