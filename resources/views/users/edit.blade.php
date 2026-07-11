@@ -30,7 +30,6 @@
                         <select id="role" name="role" class="block mt-1 w-full border-gray-300 focus:border-primary-500 focus:ring-primary-500 rounded-xl shadow-sm" required>
                             <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
                             <option value="prodi" {{ old('role', $user->role) === 'prodi' ? 'selected' : '' }}>Kaprodi / Pengelola Prodi</option>
-                            <option value="mahasiswa" {{ old('role', $user->role) === 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                         </select>
                         <x-input-error :messages="$errors->get('role')" class="mt-2" />
                     </div>

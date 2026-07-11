@@ -30,10 +30,8 @@
                             <option value="">-- Pilih Role --</option>
                             <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                             <option value="prodi" {{ old('role') === 'prodi' ? 'selected' : '' }}>Kaprodi / Pengelola Prodi</option>
-                            <option value="mahasiswa" {{ old('role') === 'mahasiswa' ? 'selected' : '' }}>Mahasiswa (Manual)</option>
                         </select>
                         <x-input-error :messages="$errors->get('role')" class="mt-2" />
-                        <p class="text-xs text-slate-500 mt-1">*Catatan: Mahasiswa sebaiknya dibuat secara otomatis melalui menu Data Mahasiswa.</p>
                     </div>
 
                     <div>
