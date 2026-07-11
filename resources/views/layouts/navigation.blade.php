@@ -10,6 +10,11 @@
             <div class="h-16 flex items-center border-b border-slate-100 bg-white/50 backdrop-blur-xl">
                 @php
                     $appLogo = \App\Models\Setting::where('key', 'app_logo')->value('value');
+                    $appName = \App\Models\Setting::where('key', 'app_name')->value('value') ?? 'Sistem Monitoring Kinerja Akademik';
+                    $words = explode(' ', $appName);
+                    $splitPoint = count($words) > 2 ? 2 : (count($words) > 1 ? 1 : count($words));
+                    $topText = implode(' ', array_slice($words, 0, $splitPoint));
+                    $bottomText = implode(' ', array_slice($words, $splitPoint));
                 @endphp
                 @if($appLogo)
                     <img src="{{ asset('storage/' . $appLogo) }}" alt="Logo" class="w-8 h-8 object-contain">
@@ -21,9 +26,11 @@
                         </svg>
                     </div>
                 @endif
-                <div class="ml-3 flex flex-col justify-center">
-                    <span class="text-base font-heading font-extrabold text-slate-900 tracking-tight leading-none">Sistem Monitoring</span>
-                    <span class="text-sm font-heading font-bold text-slate-600 tracking-tight mt-0.5">Akademik</span>
+                <div class="ml-3 flex flex-col justify-center overflow-hidden">
+                    <span class="text-base font-heading font-extrabold text-slate-900 tracking-tight leading-none truncate" title="{{ $appName }}">{{ $topText }}</span>
+                    @if($bottomText)
+                    <span class="text-sm font-heading font-bold text-slate-600 tracking-tight mt-0.5 truncate" title="{{ $appName }}">{{ $bottomText }}</span>
+                    @endif
                 </div>
             </div>
         </a>

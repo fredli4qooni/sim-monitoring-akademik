@@ -7,7 +7,11 @@
                 <div class="flex items-center gap-3">
                     @php
                         $appLogo = \App\Models\Setting::where('key', 'app_logo')->value('value');
-                        $appName = \App\Models\Setting::where('key', 'app_name')->value('value') ?? 'SPK UIN RIL';
+                        $appName = \App\Models\Setting::where('key', 'app_name')->value('value') ?? 'Sistem Monitoring Kinerja Akademik';
+                        $words = explode(' ', $appName);
+                        $splitPoint = count($words) > 2 ? 2 : (count($words) > 1 ? 1 : count($words));
+                        $topText = implode(' ', array_slice($words, 0, $splitPoint));
+                        $bottomText = implode(' ', array_slice($words, $splitPoint));
                     @endphp
                     @if($appLogo)
                         <img src="{{ asset('storage/' . $appLogo) }}" alt="Logo" class="w-8 h-8 object-contain">
@@ -19,7 +23,12 @@
                             </svg>
                         </div>
                     @endif
-                    <span class="text-xl font-heading font-extrabold text-slate-900 tracking-tight">{{ $appName }}</span>
+                    <div class="ml-2 flex flex-col justify-center">
+                        <span class="text-lg font-heading font-extrabold text-slate-900 tracking-tight leading-none">{{ $topText }}</span>
+                        @if($bottomText)
+                        <span class="text-sm font-heading font-bold text-slate-600 tracking-tight mt-0.5">{{ $bottomText }}</span>
+                        @endif
+                    </div>
                 </div>
                 <div class="flex gap-2">
                     @if(isset($mahasiswa))
