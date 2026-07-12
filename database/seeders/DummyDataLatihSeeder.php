@@ -55,7 +55,7 @@ class DummyDataLatihSeeder extends Seeder
                 'mahasiswa_id' => $mhs->id,
                 'ip_terakhir' => $item['ip'],
                 'kondisi_ekonomi' => $item['eko'],
-                'lingkungan_sosial' => $item['sos'],
+                'dukungan_keluarga' => $item['sos'],
                 'lingkungan_pertemanan' => $item['teman'],
                 'keaktifan_organisasi' => $item['org'],
                 'pengaruh_organisasi' => $item['p_org'],

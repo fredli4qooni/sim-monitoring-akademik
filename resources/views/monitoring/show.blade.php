@@ -72,7 +72,7 @@
                                 $attrMap = [
                                     'ipk' => 'IP Terakhir',
                                     'ekonomi' => 'Kondisi Ekonomi',
-                                    'sosial' => 'Lingkungan Sosial',
+                                    'keluarga' => 'Dukungan Keluarga',
                                     'organisasi' => 'Keaktifan Organisasi',
                                     'layanan' => 'Layanan Akademik',
                                     'sekolah' => 'Asal Sekolah',
@@ -136,14 +136,14 @@
                                 </div>
                             </div>
 
-                            <!-- Lingkungan Sosial -->
+                            <!-- Dukungan Keluarga -->
                             <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center gap-4 group hover:border-purple-200 dark:hover:border-purple-900/50 transition-colors shadow-sm h-full">
                                 <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lingkungan Sosial</span>
-                                    <span class="font-bold text-slate-900 dark:text-white text-lg mt-0.5">{{ $predictionDetails['data']['sosial'] ?? '-' }}</span>
+                                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Dukungan Keluarga</span>
+                                    <span class="font-bold text-slate-900 dark:text-white text-lg mt-0.5">{{ $predictionDetails['data']['keluarga'] ?? '-' }}</span>
                                 </div>
                             </div>
 

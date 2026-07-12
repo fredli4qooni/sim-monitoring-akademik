@@ -3,7 +3,7 @@
 @php
     $ip_terakhir = old('ip_terakhir', $data->ip_terakhir ?? '');
     $kondisi_ekonomi = old('kondisi_ekonomi', $data->kondisi_ekonomi ?? '');
-    $lingkungan_sosial = old('lingkungan_sosial', $data->lingkungan_sosial ?? '');
+    $dukungan_keluarga = old('dukungan_keluarga', $data->dukungan_keluarga ?? '');
     $lingkungan_pertemanan = old('lingkungan_pertemanan', $data->lingkungan_pertemanan ?? '');
     $keaktifan_organisasi = old('keaktifan_organisasi', $data->keaktifan_organisasi ?? '');
     $pengaruh_organisasi = old('pengaruh_organisasi', $data->pengaruh_organisasi ?? '');
@@ -60,12 +60,12 @@
                 <div class="space-y-3">
                     @foreach(['Sangat Mendukung', 'Mendukung', 'Cukup Mendukung', 'Kurang Mendukung', 'Tidak Mendukung'] as $opt)
                     <label class="flex items-center gap-3 cursor-pointer group">
-                        <input type="radio" name="lingkungan_sosial" value="{{ $opt }}" {{ $lingkungan_sosial == $opt ? 'checked' : '' }} required class="w-5 h-5 text-primary-600 border-gray-300 focus:ring-primary-500 step1-radio">
+                        <input type="radio" name="dukungan_keluarga" value="{{ $opt }}" {{ $dukungan_keluarga == $opt ? 'checked' : '' }} required class="w-5 h-5 text-primary-600 border-gray-300 focus:ring-primary-500 step1-radio">
                         <span class="text-slate-700 group-hover:text-slate-900">{{ $opt }}</span>
                     </label>
                     @endforeach
                 </div>
-                <x-input-error class="mt-2" :messages="$errors->get('lingkungan_sosial')" />
+                <x-input-error class="mt-2" :messages="$errors->get('dukungan_keluarga')" />
             </div>
 
             <!-- Lingkungan Pertemanan -->
@@ -87,7 +87,7 @@
             <button type="button" @click="
                 let v1 = document.querySelector('input[name=ip_terakhir]:checked');
                 let v2 = document.querySelector('input[name=kondisi_ekonomi]:checked');
-                let v3 = document.querySelector('input[name=lingkungan_sosial]:checked');
+                let v3 = document.querySelector('input[name=dukungan_keluarga]:checked');
                 let v4 = document.querySelector('input[name=lingkungan_pertemanan]:checked');
                 if(v1 && v2 && v3 && v4) { step = 2; } else { alert('Harap isi semua 4 pertanyaan di Sesi 1 sebelum melanjutkan.'); }
             " class="inline-flex items-center px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-white font-semibold rounded-xl text-sm transition-all shadow-sm">

@@ -28,7 +28,7 @@ class DataPreprocessingService
                 'mahasiswa_id' => $mhs->id,
                 'ipk' => optional($mhs->dataTambahan)->ip_terakhir ?? '< 3,00',
                 'ekonomi' => optional($mhs->dataTambahan)->kondisi_ekonomi ?? '< Rp2.000.000',
-                'sosial' => optional($mhs->dataTambahan)->lingkungan_sosial ?? 'Kurang Mendukung',
+                'keluarga' => optional($mhs->dataTambahan)->dukungan_keluarga ?? 'Kurang Mendukung',
                 'pertemanan' => optional($mhs->dataTambahan)->lingkungan_pertemanan ?? 'Kurang Mendukung',
                 'organisasi' => optional($mhs->dataTambahan)->keaktifan_organisasi ?? 'Tidak Aktif',
                 'pengaruh_organisasi' => optional($mhs->dataTambahan)->pengaruh_organisasi ?? 'Tidak Berpengaruh',
@@ -49,7 +49,7 @@ class DataPreprocessingService
         return [
             'ipk' => optional($mhs->dataTambahan)->ip_terakhir ?? '< 3,00',
             'ekonomi' => optional($mhs->dataTambahan)->kondisi_ekonomi ?? '< Rp2.000.000',
-            'sosial' => optional($mhs->dataTambahan)->lingkungan_sosial ?? 'Kurang Mendukung',
+            'keluarga' => optional($mhs->dataTambahan)->dukungan_keluarga ?? 'Kurang Mendukung',
             'pertemanan' => optional($mhs->dataTambahan)->lingkungan_pertemanan ?? 'Kurang Mendukung',
             'organisasi' => optional($mhs->dataTambahan)->keaktifan_organisasi ?? 'Tidak Aktif',
             'pengaruh_organisasi' => optional($mhs->dataTambahan)->pengaruh_organisasi ?? 'Tidak Berpengaruh',

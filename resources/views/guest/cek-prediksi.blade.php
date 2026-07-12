@@ -249,7 +249,7 @@
                                     <!-- Dukungan Keluarga -->
                                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
                                         <p class="text-xs text-slate-500 font-semibold uppercase mb-2">Keluarga</p>
-                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->lingkungan_sosial }}</span>
+                                        <span class="inline-flex px-2 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700">{{ $dataTambahan->dukungan_keluarga }}</span>
                                     </div>
 
                                     <!-- Lingkungan Pertemanan -->

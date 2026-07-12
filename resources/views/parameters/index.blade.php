@@ -59,16 +59,16 @@
 
                         <!-- Sosial Group -->
                         <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                            <h4 class="font-semibold text-slate-800 mb-4">Parameter Lingkungan Sosial</h4>
+                            <h4 class="font-semibold text-slate-800 mb-4">Parameter Dukungan Keluarga</h4>
                             
                             <div class="space-y-4">
                                 <div>
-                                    <x-input-label for="batas_sosial_mendukung" value="Batas Skor 'Mendukung'" class="text-slate-700" />
-                                    <x-text-input id="batas_sosial_mendukung" name="batas_sosial_mendukung" type="number" step="1" class="mt-1 block w-full rounded-xl border-slate-200 focus:border-primary-500 shadow-sm" :value="old('batas_sosial_mendukung', $parameters['batas_sosial_mendukung']->value ?? '4')" required />
+                                    <x-input-label for="batas_keluarga_mendukung" value="Batas Skor 'Mendukung'" class="text-slate-700" />
+                                    <x-text-input id="batas_keluarga_mendukung" name="batas_keluarga_mendukung" type="number" step="1" class="mt-1 block w-full rounded-xl border-slate-200 focus:border-primary-500 shadow-sm" :value="old('batas_keluarga_mendukung', $parameters['batas_keluarga_mendukung']->value ?? '4')" required />
                                 </div>
                                 <div>
-                                    <x-input-label for="batas_sosial_cukup" value="Batas Skor 'Cukup'" class="text-slate-700" />
-                                    <x-text-input id="batas_sosial_cukup" name="batas_sosial_cukup" type="number" step="1" class="mt-1 block w-full rounded-xl border-slate-200 focus:border-primary-500 shadow-sm" :value="old('batas_sosial_cukup', $parameters['batas_sosial_cukup']->value ?? '3')" required />
+                                    <x-input-label for="batas_keluarga_cukup" value="Batas Skor 'Cukup'" class="text-slate-700" />
+                                    <x-text-input id="batas_keluarga_cukup" name="batas_keluarga_cukup" type="number" step="1" class="mt-1 block w-full rounded-xl border-slate-200 focus:border-primary-500 shadow-sm" :value="old('batas_keluarga_cukup', $parameters['batas_keluarga_cukup']->value ?? '3')" required />
                                 </div>
                             </div>
                             <p class="text-xs text-slate-500 mt-3">* Jika skor kurang dari batas cukup, akan dianggap 'Kurang'.</p>

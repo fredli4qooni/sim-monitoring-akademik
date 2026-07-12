@@ -12,7 +12,7 @@ class ParameterController extends Controller
         $parameters = Setting::whereIn('key', [
             'batas_ipk_tinggi', 'batas_ipk_sedang',
             'batas_ekonomi_mampu', 'batas_ekonomi_menengah',
-            'batas_sosial_mendukung', 'batas_sosial_cukup',
+            'batas_keluarga_mendukung', 'batas_keluarga_cukup',
             'batas_layanan_baik', 'batas_layanan_cukup'
         ])->get()->keyBy('key');
 
